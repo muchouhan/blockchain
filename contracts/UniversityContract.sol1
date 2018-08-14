@@ -1,0 +1,97 @@
+pragma solidity ^0.4.18;
+
+import "./ownership/Ownable.sol";
+import "./lifecycle/Destructible.sol";
+import "./PersonContract.sol";
+import "./document/DocumentContract.sol";
+
+contract UniversityContract is Ownable,Destructible {
+
+    /**
+    *This is University
+    */
+    struct University {
+        bytes32 name;//name of document
+        address addrs;
+        bytes32 regNo;
+        address[]  personList; // list of document keys so we can look them up
+        mapping (address => PersonContract) persons;
+    }
+
+    /**
+    *Below mapping will help to fetch contract using University address
+    */
+    mapping (address => University) universities;
+
+    /**
+    *write all events of University
+    */
+    event UniversityAdded(address addrs,bytes32 name,bytes32 regNo);
+
+    /**
+     * @dev add University.
+     */
+    function addUniversity(bytes32 _name,bytes32 _regNo) payable public returns (bool) {
+        require(universities[msg.sender].addrs == address(0));
+
+        universities[msg.sender].name = _name;
+        universities[msg.sender].addrs = msg.sender;
+        universities[msg.sender].regNo =_regNo;
+
+        //trigger event
+        UniversityAdded(msg.sender,_name,_regNo);
+        return true;
+    }
+  /**
+   * This method is used to check wether given University exist or not
+   */
+   function isUniversityExist() public view returns (bool) {
+        if(universities[msg.sender].addrs == address(0))
+          return false;
+        else
+          return true;
+   }
+
+   /**
+    * This method is used to get University details
+    */
+    function getUniversity() public view returns (address,bytes32,bytes32) {
+          require(universities[msg.sender].addrs != address(0));
+
+          return (universities[msg.sender].addrs,
+                  universities[msg.sender].name,
+                  universities[msg.sender].regNo);
+    }
+
+    /**
+    *This method is used to issued a document for person
+    */
+    function enrollPerson(address _person) public  returns (bool) {
+        require(_person != address(0));
+        require(universities[msg.sender].persons[_person] == address(0));
+        PersonContract person  = PersonContract(_person);
+        universities[msg.sender].personList.push(_person);
+        universities[msg.sender].persons[_person] = person;
+
+        return true;
+    }
+
+    /**
+    *This method is used to issued a document for person
+    */
+    function enrollmentCount() public view returns (uint) {
+        require(msg.sender != address(0));
+        return universities[msg.sender].personList.length;
+    }
+
+    /**
+    *This method is used to issued a document for person
+    */
+    function getPerson(address _sender) public view returns (address,bytes32,bytes32,bytes32,bytes32,bytes32,bytes11,bytes1,bytes32,bytes32,bytes11,bytes32,bytes32) {
+        require(msg.sender != address(0));
+        require(_sender != address(0));
+        return universities[_sender].persons[msg.sender].isPersonExist();
+    }
+
+
+}

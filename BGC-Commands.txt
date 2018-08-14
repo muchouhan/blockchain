@@ -1,0 +1,55 @@
+Person
+	1) 0xf17f52151EbEF6C7334FAD080c5704D77216b732
+	2) 0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef
+
+University
+	1) 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+	2) 0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
+	
+LTI
+	1) 0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e
+	
+Nomura
+	1) 0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5
+
+Third Party Verification
+	1) 0x0F4F2Ac550A1b4e2280d04c21cEa7EBD822934b5
+
+Share Profile Org
+	1) 0x6330A553Fc93768F612722BB8c2eC78aC90B3bbc
+	
+	
+	
+	
+	
+
+1) add university in the system - address
+2) add employee in the system -address
+3) employee will enroll to university
+4) university will upload my documents
+5) employee will get notification for documents
+6) employee will approve/reject documents
+7) if approved/rejected university will get notification with comments
+8) add organisation in the system -address
+9) employee will share documentId with organisation
+10) employee will enroll to organisation
+10) organisation will raise request to view document
+11) employee will approve/reject rejected
+12)	if approved/rejected organisation will get notification with comments
+13) if approved then organisation will be able to see document
+14) organisation will upload my documents
+15) employee will get notification for documents
+16) employee will approve/reject documents
+17) if approved/rejected organisation will get notification with comments
+
+
+
+
+mkdir bgc-app1
+cd bgc-app1
+truffle unbox pet-shop
+truffle console --network development
+>compile
+>test
+>migrate
+>npm run dev

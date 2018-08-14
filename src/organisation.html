@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Entity Home</title>
+
+
+<link rel="stylesheet" href="./css//w3.css">
+<link rel="stylesheet" href="./css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/dataTables.jqueryui.min.css">
+
+<link rel="stylesheet" type="text/css" href="./css/index.css" />
+
+<script type="text/javascript" src="js/lib/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="js/lib/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/lib/dataTables.jqueryui.min.js"></script>
+<script type="text/javascript" src="js/lib/web3.min.js"></script>
+<script type="text/javascript" src="js/lib/truffle-contract.js"></script>
+<script src="js/organisation.js"></script>
+
+<script type="text/javascript" class="init">
+	$(document).ready(function() {
+
+		$('#organisationPersons').DataTable({
+			"scrollX" : true,
+			"scrollY" : "285px",
+		});
+
+		$('#personVerificationRequestForMe').DataTable({
+			"scrollX" : true,
+			"scrollY" : "80px",
+			searching : true,
+			paging : true,
+			info : true,
+		});
+
+		$('#personDetailsForVerificationPopupDocuments').DataTable({
+			"scrollX" : true,
+			"scrollY" : "130px",
+			searching : true,
+			paging : false,
+			info : false,
+		});
+
+		$('#thirdPartyVerifiedRequest').DataTable({
+			"scrollX" : true,
+			"scrollY" : "80px",
+			searching : true,
+			paging : true,
+			info : true,
+		});
+
+		$('#updatePersonDocuments').DataTable({
+			"scrollX" : true,
+			"scrollY" : "120px",
+			searching : true,
+			paging : false,
+			info : false,
+		});
+
+		App.init();
+	});
+</script>
+
+</head>
+
+<body>
+
+	<div class="container">
+
+		<header>
+			<h1>Organisation</h1>
+		</header>
+
+		<section>
+			<div id="container_demo">
+				<a class="hiddenanchor" id="tohome"></a> <a class="hiddenanchor"
+					id="tosearch"></a> <a class="hiddenanchor" id="torequest"></a> <a
+					class="hiddenanchor" id="toverify"></a> <a class="hiddenanchor"
+					id="torecruit"></a> <a class="hiddenanchor" id="toupdate"></a>
+
+				<div id="wrapper" style="width: 100%">
+
+					<div id="home" class="animate form" style="width: 100%">
+
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#tosearch"> Search</a></span> <span
+								class="menuItem"><a href="#torequest"> Request</a></span> <span
+								class="menuItem"><a href="#toverify"> Verification</a></span> <span
+								class="menuItem"><a href="#torecruit"> Recruitment</a></span> <span
+								class="menuItem"><a href="#toupdate"> Update</a></span>
+						</p>
+
+						<div style="margin-top: 20px">
+							<form onsubmit="return" style="height: 450px; margin-bottom: 1px"
+								class="well form-horizontal">
+								<fieldset>
+									<div class="form-group">
+										<label class="col-md-4 control-label">Name</label>
+										<div class="col-md-4 inputGroupContainer">
+											<div class="input-group">
+												<label class="control-label" id="organisationName">Null</label>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-4 control-label">Registration No</label>
+										<div class="col-md-4 inputGroupContainer">
+											<div class="input-group">
+												<label class="control-label" id="organisationRegNo">Null</label>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-4 control-label">Head Count</label>
+										<div class="col-md-4 inputGroupContainer">
+											<div class="input-group">
+												<label class="control-label" id="organisationPersonCount">Null</label>
+											</div>
+										</div>
+									</div>
+								</fieldset>
+							</form>
+						</div>
+					</div>
+
+					<div id="search" class="animate form" style="width: 100%">
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#tosearch"> Search</a></span> <span
+								class="menuItem"><a href="#torequest"> Request</a></span> <span
+								class="menuItem"><a href="#toverify"> Verification</a></span> <span
+								class="menuItem"><a href="#torecruit"> Recruitment</a></span> <span
+								class="menuItem"><a href="#toupdate"> Update</a></span>
+						</p>
+
+
+						<div style="margin-top: 20px">
+							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px; padding: 0px;"
+								class="well form-horizontal">
+								<table id="organisationPersons" class="display"
+									style="width: 100%;">
+
+									<thead>
+										<tr>
+											<th>Address</th>
+											<th>Name</th>
+											<th>Gender</th>
+<!-- 											<th>View Profile</th> -->
+<!-- 											<th>Modify Profile</th> -->
+<!-- 											<th>Modify Document</th> -->
+											<th>Email</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+
+								</table>
+
+							</form>
+						</div>
+					</div>
+
+					<div id="request" class="animate form" style="width: 100%">
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#tosearch"> Search</a></span> <span
+								class="menuItem"><a href="#torequest"> Request</a></span> <span
+								class="menuItem"><a href="#toverify"> Verification</a></span> <span
+								class="menuItem"><a href="#torecruit"> Recruitment</a></span> <span
+								class="menuItem"><a href="#toupdate"> Update</a></span>
+						</p>
+
+
+						<div style="margin-top: 20px">
+							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px; padding: 0px;"
+								class="well form-horizontal">
+								<table id="personVerificationRequestForMe" class="display"
+									style="width: 100%;">
+									<thead>
+										<tr>
+											<th>Address</th>
+											<th>Name</th>
+											<th>Gender</th>
+											<th>Email</th>
+											<th>Requester</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+
+								</table>
+
+							</form>
+						</div>
+					</div>
+
+					<div id="verify" class="animate form" style="width: 100%">
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#tosearch"> Search</a></span> <span
+								class="menuItem"><a href="#torequest"> Request</a></span> <span
+								class="menuItem"><a href="#toverify"> Verification</a></span> <span
+								class="menuItem"><a href="#torecruit"> Recruitment</a></span> <span
+								class="menuItem"><a href="#toupdate"> Update</a></span>
+						</p>
+
+						<div style="margin-top: 20px">
+							<form onsubmit="return false;"  style="height: 450px; margin-bottom: 1px"
+								class="well form-horizontal">
+
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td><label>Person Address : </label></td>
+													<td colspan="3"><input
+														id="verificatinoPersonUserAddress" class="bgcTextField"
+														style="width: 355px;" required
+														placeholder="Enter Person Address" /></td>
+													<td>
+														<button class="button"
+															id="verificatinoPersonSearchBtn"
+															onclick="App.verificatinoPersonSearch()"
+															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+															<i class="fa fa-search"></i>
+														</button>
+													</td>
+												</tr>
+												<tr>
+													<td><label>Full Name : </label></td>
+													<td colspan="4"><input disabled="disabled"
+														id="verificatinoPersonFullName" class="bgcTextField"
+														style="width: 355px;" type="text" value="" /></td>
+												</tr>
+
+
+												<tr>
+													<td><label>Date Of Birth : </label></td>
+													<td><input disabled="disabled"
+														id="verificatinoPersonDob" class="bgcTextField"
+														style="width: 125px;" type="text" value="" /></td>
+													<td><label>Gender : </label></td>
+													<td><input disabled="disabled"
+														id="verificatinoPersonGender" class="bgcTextField"
+														style="width: 150px;" type="text" value="" /></td>
+
+												</tr>
+												<tr>
+
+													<td><label>Email : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="verificatinoPersonEmail" class="bgcTextField"
+														style="width: 355px;" type="text"
+														value="" /></td>
+												</tr>
+											</table>
+										</td>
+										<td>
+											<table>
+												<tr>
+													<td><label>Org Address : </label></td>
+													<td colspan="3"><input
+														id="verificatinoPersonOrgAddress" class="bgcTextField"
+														style="width: 355px;"
+														placeholder="Enter Organisation Address" /></td>
+													<td>
+														<button class="button"
+															id="verificationOrgSearchBtn"
+															onclick="App.verificatinoOrganisationSearch()"
+															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+															<i class="fa fa-search"></i>
+														</button>
+													</td>
+												</tr>
+												<tr>
+													<td><label>Full Name : </label></td>
+													<td colspan="5"><input disabled="disabled"
+														id="verificatinoOrgFullName" class="bgcTextField"
+														style="width: 355px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Organisation Address : </label></td>
+													<td colspan="5"><input disabled="disabled"
+														id="verificatinoOrgAddress" class="bgcTextField"
+														style="width: 355px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Registration No : </label></td>
+													<td colspan="5"><input disabled="disabled"
+														id="verificatinoOrgRegNo" class="bgcTextField"
+														style="width: 355px;" type="text" value="" /></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="6">
+											<p style="text-align: right; margin: 5px 0;">
+												<input id="verifyPersonBtn" style="width: 130px;"
+													onclick="App.verifyPersonByOrganisation()"
+													type="submit" class="button" value="Verify" />
+											</p>
+										</td>
+									</tr>
+								</table>
+
+								<table id="thirdPartyVerifiedRequest" class="display"
+									style="width: 100%;">
+
+									<thead>
+										<tr>
+											<th>Person Address</th>
+											<th>Person Name</th>
+											<th>Organisation Address</th>
+											<th>Organisation Name</th>
+											<th>Status</th>
+											<th>Comments</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</form>
+						</div>
+					</div>
+
+					<div id="recruit" class="animate form" style="width: 100%">
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#tosearch"> Search</a></span> <span
+								class="menuItem"><a href="#torequest"> Request</a></span> <span
+								class="menuItem"><a href="#toverify"> Verification</a></span> <span
+								class="menuItem"><a href="#torecruit"> Recruitment</a></span> <span
+								class="menuItem"><a href="#toupdate"> Update</a></span>
+						</p>
+						<div style="margin-top: 20px">
+							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px"
+								class="well form-horizontal">
+
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td><label>Address : </label></td>
+													<td colspan="3"><input id="recruitPersonUserAddress"
+														class="bgcTextField" style="width: 300px;" required
+														type="text" placeholder="Enter Person Address" /></td>
+													<td colspan="2">
+														<button class="button"
+														onclick="App.enrollPersonSearch()"
+															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+															<i class="fa fa-search"></i>
+														</button>
+													</td>
+												</tr>
+												<tr>
+													<td><label>Full Name : </label></td>
+													<td colspan="5"><input id="recruitPersonFullName"
+														disabled="disabled" class="bgcTextField"
+														style="width: 300px;" type="text" value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Occupation : </label></td>
+													<td colspan="1"><input disabled="disabled"
+														id="recruitPersonOccupation" class="bgcTextField"
+														style="width: 100px;" type="text" value="" /></td>
+													<td><label>Income : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="recruitPersonIncome" class="bgcTextField"
+														style="width: 105px;" type="text" value="" /></td>
+												</tr>
+
+												<tr>
+													<td><label>Date Of Birth : </label></td>
+													<td colspan="1"><input disabled="disabled"
+														id="recruitPersonDob" class="bgcTextField"
+														style="width: 100px;" type="text" value="" /></td>
+													<td><label>Gender : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="recruitPersonGender" class="bgcTextField"
+														style="width: 105px;" type="text" value="" /></td>
+
+												</tr>
+												<tr>
+													<td><label>Address Line 1 : </label></td>
+													<td colspan="5"><input disabled="disabled"
+														id="recruitPersonAddressLine1" class="bgcTextField"
+														style="width: 300px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Line 2 : </label></td>
+													<td colspan="5"><input disabled="disabled"
+														id="recruitPersonAddressLine2" class="bgcTextField"
+														style="width: 300px;" type="text"
+														value="" /></td>
+
+												</tr>
+												<tr>
+													<td><label>Mobile : </label></td>
+													<td><input disabled="disabled"
+														id="recruitPersonMobile" class="bgcTextField"
+														style="width: 110px;" type="text" value="" /></td>
+													<td><label>Country : </label></td>
+
+													<td><input disabled="disabled"
+														id="recruitPersonCountry" class="bgcTextField"
+														style="width: 105px;" type="text" value="" /></td>
+
+													<td><label>Email : </label></td>
+													<td><input disabled="disabled" id="recruitPersonEmail"
+														class="bgcTextField" style="width: 250px;" type="text"
+														value="" /></td>
+												</tr>
+
+												<tr>
+													<td colspan="6">
+														<p style="text-align: right; margin: 5px 0;">
+															<input id="recruitPersonRecruitBtn" type="submit"
+																onclick="App.enrollRecruitPerson()"
+																class="button" value="Recruit" />
+														</p>
+													</td>
+												</tr>
+											</table>
+
+
+										</td>
+										<td>
+											<div
+												style="width: 200px; height: 40px; border: thin; margin-left: -202px; margin-top: -150px;">
+												<img id="recruitPersonPhotoId" src="images\img_avatar3.png"
+													alt="Person" style="width: 100%">
+
+											</div>
+										</td>
+
+									</tr>
+								</table>
+
+							</form>
+						</div>
+					</div>
+
+					<div id="update" class="animate form" style="width: 100%">
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#tosearch"> Search</a></span> <span
+								class="menuItem"><a href="#torequest"> Request</a></span> <span
+								class="menuItem"><a href="#toverify"> Verification</a></span> <span
+								class="menuItem"><a href="#torecruit"> Recruitment</a></span> <span
+								class="menuItem"><a href="#toupdate"> Update</a></span>
+						</p>
+
+						<div style="margin-top: 20px">
+							<form onsubmit="return" style="height: 450px; margin-bottom: 1px"
+								class="well form-horizontal">
+
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td><label>Address</label></td>
+													<td colspan="4"><input
+														id="organisationUpdatePersonUserAddress"
+														class="bgcTextField" style="width: 255px;" type="text"
+														placeholder="Enter Person Address" /></td>
+													<td>
+														<button id="organisationUpdatePersonSearchBtn"
+															class="button" onclick="App.updatePersonSearch()"
+															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+															<i class="fa fa-search"></i>
+														</button>
+													</td>
+													<td><label>Full Name : </label></td>
+													<td colspan="3"><input
+														id="organisationUpdatePersonFullName" class="bgcTextField"
+														style="width: 255px;" type="text" value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Address Line 1 : </label></td>
+													<td colspan="4"><input
+														id="organisationUpdatePersonAddressLine1"
+														class="bgcTextField" style="width: 255px;" type="text"
+														value="" /></td>
+													<td></td>
+													<td><label>Line 2 : </label></td>
+													<td colspan="3"><input
+														id="organisationUpdatePersonAddressLine2"
+														class="bgcTextField" style="width: 255px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Country : </label></td>
+
+													<td><input id="organisationUpdatePersonCountry"
+														class="bgcTextField" style="width: 60px;" type="text"
+														value="" /></td>
+													<td><label>Date Of Birth : </label></td>
+													<td colspan="2"><input
+														id="organisationUpdatePersonDob" class="bgcTextField"
+														style="width: 75px;" type="text" value="" /></td>
+													<td></td>
+													<td><label>Gender : </label></td>
+													<td><input id="organisationUpdatePersonGender"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+
+													<td><label>Mobile : </label></td>
+													<td><input id="organisationUpdatePersonMobile"
+														class="bgcTextField" style="width: 100px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+
+													<td><label>Occupation : </label></td>
+													<td colspan="4"><input
+														id="organisationUpdatePersonOccupation"
+														class="bgcTextField" style="width: 255px;" type="text"
+														value="" /></td>
+													<td></td>
+													<td><label>Income : </label></td>
+													<td><input id="organisationUpdatePersonIncome"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+													<td><label>Email : </label></td>
+													<td><input id="organisationUpdatePersonEmail"
+														class="bgcTextField" style="width: 250px;" type="text"
+														value="" /></td>
+												</tr>
+											</table>
+										</td>
+										<td>
+											<div
+												style="width: 105px; height: 45px; border: thin; margin-left: -110px; margin-top: -70px;">
+												<img id="organisationUpdatePersonPhotoId"
+													src="images\img_avatar3.png" alt="Person"
+													style="width: 100%">
+
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<div style="text-align: left; margin-bottom: -50px;">
+												<button title="Add Document"
+													id="organisationUpdatePersonAddDocumentBtn"
+													onclick="App.updatePersonAddDocumentPopup(this)"
+													class="button"
+													style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0;">
+													<i style="font-size: 20px" class="fa">&#xf067;</i></i>
+												</button>
+
+											</div>
+
+										</td>
+									</tr>
+								</table>
+								<table id="updatePersonDocuments" class="display"
+									style="width: 100%;">
+
+									<thead>
+										<tr>
+											<th>Document ID</th>
+											<th>Issuer</th>
+											<th>Document Name</th>
+											<th>Approver</th>
+											<th>Status</th>
+											<th>Comments</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 90%">
+											<p style="text-align: right; margin: 5px 0;">
+												<textarea id="updateOrganisationApproverComments" rows="1" cols="10"
+													class="bgcTextField" style="width: 100%; resize: none;"
+													 placeholder="Enter your comments"></textarea>
+											</p>
+										</td>
+										<td>
+											<p style="text-align: right; margin: 5px 0;">
+												<button title="Approve" class="button"
+													onclick="App.updateOrganisationPersonDetails()"
+													style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+													<i class="fa">&#xf058;</i>
+												</button>
+												<button title="Reject" class="button"
+													onclick="App.rejectPersonVerificationDetails()"
+													style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+													<i class="fa">&#xf00d;</i>
+												</button>
+											</p>
+										</td>
+									</tr>
+								</table>
+							</form>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<div id="organisationUpdatePersonAddDocumentPopup"
+		class="popupbox w3-animate-opacity">
+		<!-- Modal content -->
+		<div class="modal-content" style="width: 47%; height: 300px;">
+			<span class="popupClose"
+				onclick="document.getElementById('organisationUpdatePersonAddDocumentPopup').style.display='none'">&times;</span>
+			<div id="container_demo">
+				<div id="wrapper" style="width: 100%; height: 250px;">
+
+					<div id="popupboxpanel" class="animate form" style="width: 100%">
+						<div style="margin-top: 20px">
+							<form onsubmit="return"  style="height: 250px; margin-bottom: 1px"
+								class="well form-horizontal">
+
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td>
+														<button class="button"
+															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+															<i class="fa">&#xf093;</i>
+														</button>
+													</td>
+
+													<td><label>Document ID : </label></td>
+													<td><input id="userDocId" class="bgcTextField"
+														style="width: 320px;" disabled="disabled" required
+														type="text" value="46e014aaf5dca488057592ee47305d9b3e10" /></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td><label>Document Name : </label></td>
+													<td colspan="1"><input id="addressLine1"
+														class="bgcTextField" style="width: 320px;" required
+														type="text" value="10 Marksheet" /></td>
+												</tr>
+												<tr>
+													<td colspan="7"><textarea style="resize: none;"
+															name="message" rows="4" cols="66"
+															placeholder="Please enter your comments"></textarea></td>
+												</tr>
+												<tr>
+													<td colspan="7">
+														<p style="text-align: right; margin: 5px 0;">
+															<button title="Approve" class="button"
+																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+																<i class="fa">&#xf058;</i>
+															</button>
+															<button title="Reject" class="button"
+																onclick="App.rejectUpdatePersonDocument()"
+																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+																<i class="fa">&#xf00d;</i>
+															</button>
+														</p>
+													</td>
+
+												</tr>
+											</table>
+										</td>
+
+									</tr>
+
+								</table>
+
+							</form>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div id="fetchPersonDetailsForVerificationPopup"
+		class="popupbox w3-animate-opacity">
+		<!-- Modal content -->
+		<div class="modal-content" style="width: 79%; height: 500px;">
+			<span class="popupClose"
+				onclick="document.getElementById('fetchPersonDetailsForVerificationPopup').style.display='none'">&times;</span>
+			<div id="container_demo">
+				<div id="wrapper" style="width: 100%; height: 350px;">
+
+					<div style="width: 100%">
+						<div style="margin-top: 20px">
+							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px"
+								class="well form-horizontal">
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td><label>Address</label></td>
+													<td colspan="3"><input
+														id="personDetailsForVerificationPopupUserAddress"
+														class="bgcTextField" style="width: 290px;"
+														disabled="disabled" type="text" value="" /></td>
+													<td><label>Full Name : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="personDetailsForVerificationPopupFullName"
+														class="bgcTextField" style="width: 250px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Address Line 1 : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="personDetailsForVerificationPopupAddressLine1"
+														class="bgcTextField" style="width: 290px;" type="text"
+														value="" /></td>
+													<td><label>Line 2 : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="personDetailsForVerificationPopupAddressLine2"
+														class="bgcTextField" style="width: 250px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Country : </label></td>
+
+													<td><input disabled="disabled"
+														id="personDetailsForVerificationPopupCountry"
+														class="bgcTextField" style="width: 90px;" type="text"
+														value="" /></td>
+													<td><label>Date Of Birth : </label></td>
+													<td><input disabled="disabled"
+														id="personDetailsForVerificationPopupDob"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+													<td><label>Gender : </label></td>
+													<td><input disabled="disabled"
+														id="personDetailsForVerificationPopupGender"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+
+													<td><label>Mobile : </label></td>
+													<td><input disabled="disabled"
+														id="personDetailsForVerificationPopupMobile"
+														class="bgcTextField" style="width: 95px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+
+													<td><label>Occupation : </label></td>
+													<td><input disabled="disabled"
+														id="personDetailsForVerificationPopupOccupation"
+														class="bgcTextField" style="width: 90px;" type="text"
+														value="" /></td>
+													<td><label>Income : </label></td>
+													<td><input disabled="disabled"
+														id="personDetailsForVerificationPopupIncome"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+													<td><label>Email : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="personDetailsForVerificationPopupEmail"
+														class="bgcTextField" style="width: 250px;" type="text"
+														value="" /></td>
+												</tr>
+											</table>
+										</td>
+										<td>
+											<div
+												style="margin-left: 10px; width: 126px; height: 130px; border: thin;">
+												<img id="personDetailsForVerificationPopupPersonPhotoId"
+													src="images\img_avatar3.png" alt="Person"
+													style="width: 100%">
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<table id="personDetailsForVerificationPopupDocuments"
+												class="display" style="width: 100%;">
+												<thead>
+													<tr>
+														<th>Document ID</th>
+														<th>Issuer</th>
+														<th>Document Name</th>
+														<th>Status</th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+										</td>
+
+									</tr>
+									<tr>
+										<td>
+											<p style="text-align: right; margin: 5px 0;">
+												<textarea id="personDetailsForVerificationPopupApproverComments" rows="1" cols="10"
+													class="bgcTextField" style="width: 100%; resize: none;"
+													required type="text" placeholder="Enter your comments"></textarea>
+											</p>
+										</td>
+										<td colspan="7">
+											<p style="text-align: right; margin: 5px 0;">
+												<button title="Approve" class="button"
+													onclick="App.approvePersonVerificationDetails()"
+													style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+													<i class="fa">&#xf058;</i>
+												</button>
+												<button title="Reject" class="button"
+													onclick="App.rejectPersonVerificationDetails()"
+													style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+													<i class="fa">&#xf00d;</i>
+												</button>
+											</p>
+										</td>
+									</tr>
+								</table>
+							</form>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div id="sharePersonVerifiactionPopup"
+		class="popupbox w3-animate-opacity">
+		<!-- Modal content -->
+		<div class="modal-content" style="width: 47%; height: 300px;">
+			<span class="popupClose"
+				onclick="document.getElementById('sharePersonVerifiactionPopup').style.display='none'">&times;</span>
+			<div id="container_demo">
+				<div id="wrapper" style="width: 100%; height: 250px;">
+
+					<div id="popupboxpanel" class="animate form" style="width: 100%">
+						<div style="margin-top: 20px">
+							<form onsubmit="return"  style="height: 250px; margin-bottom: 1px"
+								class="well form-horizontal">
+
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td>
+														<button class="button"
+															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+															<i class="fa">&#xf093;</i>
+														</button>
+													</td>
+
+													<td><label>Document ID : </label></td>
+													<td><input id="userDocId" class="bgcTextField"
+														style="width: 320px;" disabled="disabled" required
+														type="text" value="46e014aaf5dca488057592ee47305d9b3e10" /></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td><label>Document Name : </label></td>
+													<td colspan="1"><input id="addressLine1"
+														class="bgcTextField" style="width: 320px;" required
+														type="text" value="10 Marksheet" /></td>
+												</tr>
+												<tr>
+													<td colspan="7"><textarea style="resize: none;"
+															name="message" rows="4" cols="66"
+															placeholder="Please enter your comments"></textarea></td>
+												</tr>
+												<tr>
+													<td colspan="7">
+														<p style="text-align: right; margin: 5px 0;">
+															<button title="Approve" class="button"
+																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+																<i class="fa">&#xf058;</i>
+															</button>
+															<button title="Reject" class="button"
+																onclick="document.getElementById('addDocumentpopup').style.display='none'"
+																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+																<i class="fa">&#xf00d;</i>
+															</button>
+														</p>
+													</td>
+
+												</tr>
+											</table>
+										</td>
+
+									</tr>
+
+								</table>
+
+							</form>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

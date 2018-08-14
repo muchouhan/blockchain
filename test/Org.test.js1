@@ -1,0 +1,37 @@
+var App = artifacts.require("./App.sol");
+
+// test suite
+contract('App', function(accounts){
+  it("should be initialized with zero", function() {
+    return App.deployed().then(function(instance) {
+      return instance.isOrgExist({from:web3.eth.accounts[0]});
+    }).then(function(data) {
+      assert.equal(data, false, "Organisation size must be zero");
+    })
+  });
+
+  it("should be added to system ", function() {
+    var instance;
+    return App.deployed().then(function(inst) {
+      instance = inst;
+      return instance.isOrgExist({from:web3.eth.accounts[0]});
+    }).then(function(data) {
+      //console.log("Org exist:"+data);
+      assert.equal(data, false, "Organisation size must be zero");
+      return instance.addOrg(web3.fromAscii("Org name"),"RegNo1223",{from:web3.eth.accounts[0]});
+    }).then(function(data){
+        //console.log("Receipt:"+data.tx);
+        return instance.isOrgExist({from:web3.eth.accounts[0]});
+    }).then(function(data) {
+      assert.equal(data, true, "Organisation size must be 1");
+      return instance.getOrg({from:web3.eth.accounts[0]});
+    }).then(function(data){
+        var orgName =web3.toAscii(data[1]).replace(/\u0000/g, '');
+        var regNo =web3.toAscii(data[2]).replace(/\u0000/g, '');
+        assert.equal(data[0], web3.eth.accounts[0], "Organisation address must be "+web3.eth.accounts[0]);
+        assert.equal(orgName, "Org name", "Organisation name must be Org name");
+        assert.equal(regNo, "RegNo1223", "Organisation RegNo must be RegNo1223");
+    })
+  });
+
+});

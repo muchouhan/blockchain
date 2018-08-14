@@ -1,0 +1,61 @@
+pragma solidity ^0.4.18;
+
+import "./ownership/Ownable.sol";
+import "./lifecycle/Destructible.sol";
+
+contract OrganisationContract is Ownable,Destructible {
+
+    /**
+    *This is document body
+    */
+    struct Org {
+        bytes32 name;//name of document
+        address addrs;
+        bytes32 regNo;
+    }
+
+    /**
+    *Below mapping will help to fetch contract using Organisation address
+    */
+    mapping (address => Org) orgs;
+
+    /**
+    *write all events of Organisation
+    */
+    event OrgCreated(bytes32 name,address addrs,bytes32 regNo);
+
+    /**
+     * @dev add Entity.
+     */
+    function addOrg(bytes32 _name,bytes32 _regNo) payable public returns (bool) {
+        require(orgs[msg.sender].addrs == address(0));
+
+        orgs[msg.sender].name = _name;
+        orgs[msg.sender].addrs = msg.sender;
+        orgs[msg.sender].regNo =_regNo;
+
+        //trigger event
+        OrgCreated(_name,msg.sender,_regNo);
+        return true;
+    }
+  /**
+   * This method is used to check wether given Organisation exist or not
+   */
+   function isOrgExist() public view returns (bool) {
+        if(orgs[msg.sender].addrs == address(0))
+          return false;
+        else
+          return true;
+   }
+
+   /**
+    * This method is used to get Organisation details
+    */
+    function getOrg() public view returns (address,bytes32,bytes32) {
+          require(orgs[msg.sender].addrs != address(0));
+
+          return (orgs[msg.sender].addrs,
+                  orgs[msg.sender].name,
+                  orgs[msg.sender].regNo);
+    }
+}

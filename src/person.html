@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<title>User Home</title>
+
+<link rel="stylesheet" href="../css//w3.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/jquery-ui.css">
+<link rel="stylesheet" href="../css/dataTables.jqueryui.min.css">
+
+<!-- Bootstrap Core CSS -->
+<link rel="stylesheet" href="./css/bootstrap.min.css" />
+<link rel="stylesheet" href="./css/index.css" />
+
+<script type="text/javascript" src="js/lib/jquery.min.js"></script>
+<script type="text/javascript" src="js/lib/web3.min.js"></script>
+<script type="text/javascript" src="js/lib/truffle-contract.js"></script>
+
+<script type="text/javascript" src="js/person.js"></script>
+
+<script type="text/javascript" src="js/lib/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="js/lib/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/lib/dataTables.jqueryui.min.js"></script>
+
+<script type="text/javascript" class="init">
+	$(document).ready(function() {
+
+		App.init();
+
+		$('#personAccessRequest').DataTable({
+			"scrollX" : true,
+			"scrollY" : "285px",
+		});
+
+		$('#personDocuments').DataTable({
+			"scrollX" : true,
+			"scrollY" : "135px",
+		});
+	});
+</script>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<header>
+			<h1>Person</h1>
+		</header>
+
+		<section>
+			<div id="container_demo">
+				<a class="hiddenanchor" id="tohome"></a> <a class="hiddenanchor"
+					id="toaccess"></a>
+
+				<div id="wrapper" style="width: 100%">
+
+
+					<div id="home" class="animate form" style="width: 100%">
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#toaccess"> Access</a></span>
+						</p>
+						<div style="margin-top: 20px">
+							<form style="height: 450px; margin-bottom: 1px"
+								class="well form-horizontal">
+
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td><label>Address</label></td>
+													<td colspan="3"><input id="userAddress"
+														class="bgcTextField" style="width: 290px;"
+														disabled="disabled" type="text"
+														value="" /></td>
+													<td><label>Full Name : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="userFullName" class="bgcTextField"
+														style="width: 250px;" type="text" value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Address Line 1 : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="addressLine1" class="bgcTextField"
+														style="width: 290px;" type="text"
+														value="" /></td>
+													<td><label>Line 2 : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="addressLine2" class="bgcTextField"
+														style="width: 250px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+													<td><label>Country : </label></td>
+
+													<td><input disabled="disabled" id="country"
+														class="bgcTextField" style="width: 90px;" type="text"
+														value="" /></td>
+													<td><label>Date Of Birth : </label></td>
+													<td><input disabled="disabled" id="dob"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+													<td><label>Gender : </label></td>
+													<td><input disabled="disabled" id="gender"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+
+													<td><label>Mobile : </label></td>
+													<td><input disabled="disabled" id="mobile"
+														class="bgcTextField" style="width: 95px;" type="text"
+														value="" /></td>
+												</tr>
+												<tr>
+
+													<td><label>Occupation : </label></td>
+													<td><input disabled="disabled" id="occupation"
+														class="bgcTextField" style="width: 90px;" type="text"
+														value="" /></td>
+													<td><label>Income : </label></td>
+													<td><input disabled="disabled" id="income"
+														class="bgcTextField" style="width: 80px;" type="text"
+														value="" /></td>
+													<td><label>Email : </label></td>
+													<td colspan="3"><input disabled="disabled" id="email"
+														class="bgcTextField" style="width: 250px;" type="text"
+														value="" /></td>
+												</tr>
+											</table>
+										</td>
+
+										<td>
+											<div
+												style="margin-left:10px; width: 126px; height: 130px; border: thin;">
+												<img id="personPhotoId" src="images\img_avatar3.png"
+													alt="Person" style="width: 100%">
+
+											</div>
+										</td>
+									</tr>
+								</table>
+								<table id="personDocuments" class="display" style="width: 100%;">
+									<thead>
+										<tr>
+											<th>Document ID</th>
+											<th>Issuer</th>
+											<th>Document Name</th>
+											<th>Approver</th>
+											<th>Status</th>
+											<th>Comments</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+
+									</tbody>
+
+								</table>
+							</form>
+						</div>
+					</div>
+
+					<div id="access" class="animate form" style="width: 100%">
+						<p>
+							<span class="menuItem"><a href="#tohome"> Home</a></span> <span
+								class="menuItem"><a href="#toaccess"> Access</a></span>
+						</p>
+						<div style="margin-top: 20px">
+							<form style="height: 450px; margin-bottom: 1px; padding: 0px;"
+								class="well form-horizontal">
+
+
+								<table id="personAccessRequest" class="display"
+									style="width: 100%;">
+
+									<thead>
+										<tr>
+											<th>Address</th>
+											<th>Entity Name</th>
+											<th>Entity Type</th>
+											<th>View Profile</th>
+											<th>Modify Profile</th>
+											<th>Modify Document</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+
+									</tbody>
+
+								</table>
+							</form>
+						</div>
+					</div>
+
+				</div>
+
+
+			</div>
+		</section>
+	</div>
+
+	<div id="personDocumentPopup" class="popupbox w3-animate-opacity">
+		<!-- Modal content -->
+		<div class="modal-content" style="width: 75%; height: 300px;">
+			<span class="popupClose"
+				onclick="document.getElementById('personDocumentPopup').style.display='none'">&times;</span>
+			<div id="container_demo">
+				<div id="wrapper" style="width: 100%; height: 250px;">
+
+					<div id="popupboxpanel" class="animate form" style="width: 100%">
+						<div style="margin-top: 20px">
+							<form style="height: 250px; margin-bottom: 1px"
+								class="well form-horizontal">
+
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td><label>Document ID</label></td>
+													<td colspan="3"><input id="popupUserDocId"
+														class="bgcTextField" style="width: 320px;"
+														disabled="disabled" required type="text"
+														value="46e014aaf5dca488057592ee47305d9b3e10" /></td>
+
+													<td>
+														<button class="button"
+															onclick="App.downloadPersonDocument();"
+															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+															<i class="fa">&#xf019;</i>
+														</button>
+													</td>
+													<td><label>Issuer : </label></td>
+													<td colspan="3"><input disabled="disabled"
+														id="popupIssuer" class="bgcTextField"
+														style="width: 250px;" type="text"
+														value="Vikram University" /></td>
+												</tr>
+												<tr>
+													<td><label>Document Name : </label></td>
+													<td colspan="1"><input disabled="disabled"
+														id="popupDocName" class="bgcTextField"
+														style="width: 150px;" type="text" value="10 Marksheet" /></td>
+													<td><label>Status : </label></td>
+
+													<td><input disabled="disabled" id="popupDocStatus"
+														class="bgcTextField" style="width: 90px;" type="text"
+														value="Uploaded" /></td>
+													<td></td>
+													<td><label>Comments : </label></td>
+													<td><input disabled="disabled"
+														id="poupDocIssuerComment" class="bgcTextField"
+														style="width: 250px;" type="text"
+														value="check your document and approve" /></td>
+												</tr>
+												<tr>
+													<td colspan="7"><textarea style="resize: none;"
+															id="poupDocPersonComment" rows="4" cols="115"
+															placeholder="Please enter your comments"></textarea></td>
+												</tr>
+												<tr>
+													<td colspan="7">
+														<p style="text-align: right; margin: 5px 0;">
+															<button title="Approve" class="button"
+																onclick="App.approvePersonDocument();"
+																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+																<i class="fa">&#xf058;</i>
+															</button>
+															<button title="Reject" class="button"
+																onclick="App.rejectPersonDocument();"
+																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
+																<i class="fa">&#xf00d;</i>
+															</button>
+														</p>
+													</td>
+
+												</tr>
+											</table>
+										</td>
+
+									</tr>
+
+								</table>
+
+							</form>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

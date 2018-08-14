@@ -1,0 +1,122 @@
+pragma solidity ^0.4.18;
+
+import "./ownership/Ownable.sol";
+import "./lifecycle/Destructible.sol";
+import "./document/DocumentContract.sol";
+
+
+contract PersonContract is Ownable,Destructible {
+
+    /**
+    *This is document body
+    */
+    struct Person {
+            address  addrs;
+            bytes32  fName;//name of document
+            bytes32  mName;
+            bytes32  lName;
+            bytes32  occupation;
+            bytes32  income;
+            bytes11  dob;
+            bytes1   gender;
+            bytes32  rAddress1;
+            bytes32  rAddress2;
+            bytes11  mobile;
+            bytes32  email;
+            bytes32  country;
+            bytes32[]  documentList; // list of document keys so we can look them up
+            mapping (bytes32 => DocumentContract) documents;
+    }
+
+    /**
+    *Below mapping will help to fetch contract using Person address
+    address approver;
+    string comments;
+    */
+    mapping (address => Person) public persons;
+
+    /**
+    *write all events of University
+    */
+    event PersonAdded(address addrs,bytes32 fName, bytes32 mName,bytes32 lName,bytes32 occupation, bytes32 income,bytes11 dob, bytes1 gender,bytes32 rAddress1,bytes32 rAddress2,bytes11 mobile,bytes32 email,bytes32 country);
+
+    /**
+     * @dev add Person.
+     */
+    function addPerson(bytes32 _fName,bytes32 _mName,
+                       bytes32 _lName,bytes32 _occupation,
+                       bytes32 _income,bytes11 _dob,
+                       bytes1 _gender,bytes32 _rAddress1,
+                       bytes32 _rAddress2,bytes11 _mobile,
+                       bytes32 _email,bytes32 _country) payable public returns (bool) {
+
+        require(persons[msg.sender].addrs == address(0));
+
+        persons[msg.sender].addrs = msg.sender;
+        persons[msg.sender].fName = _fName;
+        persons[msg.sender].mName = _mName;
+        persons[msg.sender].lName = _lName;
+        persons[msg.sender].occupation =_occupation;
+        persons[msg.sender].income =_income;
+        persons[msg.sender].dob =_dob;
+        persons[msg.sender].gender =_gender;
+        persons[msg.sender].rAddress1 =_rAddress1;
+        persons[msg.sender].rAddress2 =_rAddress2;
+        persons[msg.sender].mobile =_mobile;
+        persons[msg.sender].email =_email;
+        persons[msg.sender].country =_country;
+
+        //trigger event
+        PersonAdded(msg.sender,_fName,_mName,_lName,_occupation,_income,_dob,_gender,_rAddress1,_rAddress2,_mobile,_email,_country);
+        return true;
+    }
+
+    /**
+     * This method is used to check wether given University exist or not
+     */
+     function isPersonExist() public view returns (bool) {
+          if(persons[msg.sender].addrs == address(0))
+            return false;
+          else
+            return true;
+     }
+
+     /**
+      * This method is used to get University details
+      */
+      function getPerson() public view returns (address,bytes32,bytes32,bytes32,bytes32,bytes32,bytes11,bytes1,bytes32,bytes32,bytes11,bytes32,bytes32) {
+            require(persons[msg.sender].addrs != address(0));
+
+            return (
+              persons[msg.sender].addrs,
+              persons[msg.sender].fName,
+              persons[msg.sender].mName,
+              persons[msg.sender].lName,
+              persons[msg.sender].occupation,
+              persons[msg.sender].income,
+              persons[msg.sender].dob,
+              persons[msg.sender].gender,
+              persons[msg.sender].rAddress1,
+              persons[msg.sender].rAddress2,
+              persons[msg.sender].mobile,
+              persons[msg.sender].email,
+              persons[msg.sender].country
+              );
+      }
+
+    function addDocument(address _person,bytes32 _name, bytes32 _documentID,string _comments) public returns (bool){
+        require(persons[_person].addrs != address(0));
+        require(_name != "");
+        require(bytes(_comments).length == 0);
+        //persons[_person].documents[_documentID] = DocumentBody();
+        //persons[_person].documents[_documentID].name = _name;
+        //persons[_person].documents[_documentID].issuer = msg.sender;
+        //persons[_person].documents[_documentID].recipient = _person;
+        //persons[_person].documents[_documentID].comments =_comments;
+        persons[_person].documentList.push(_documentID);
+
+        return true;
+    }
+
+
+}

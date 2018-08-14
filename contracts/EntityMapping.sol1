@@ -1,0 +1,62 @@
+pragma solidity ^0.4.18;
+
+import "./ownership/Ownable.sol";
+import "./lifecycle/Destructible.sol";
+
+contract EntityMapping is Ownable,Destructible {
+
+    /**
+    *write all events of Entity
+    */
+    event AddedMapping(uint etype,address addrs);
+
+    /*
+    *This is status enum used to indentify document status
+    */
+    enum Type {EMPLOYEE,ORGANISATION,UNIVERSITY}
+
+    /**
+    *This is document body
+    */
+    struct Mapping {
+        Type etype;
+        address addrs;
+    }
+
+    /**
+    *Below mapping will help to fetch contract using Entity address
+    */
+    mapping (address => Mapping) mappings;
+
+    /**
+     * @dev add Entity.
+     */
+    function addMapping(uint _type) payable public returns (bool) {
+        require(mappings[msg.sender].addrs == address(0));
+
+        mappings[msg.sender].etype = Type(_type);
+        //trigger event
+        AddedMapping(_type, msg.sender);
+        return true;
+    }
+
+  /**
+   * This method is used to check wether given Entity exist or not
+   */
+   function isAddressUsed() public view returns (bool) {
+        if(mappings[msg.sender].addrs == address(0))
+          return false;
+        else
+          return true;
+   }
+
+   /**
+    * This method is used to get Entity details
+    */
+    function getAddressType() public view returns (uint) {
+          require(mappings[msg.sender].addrs != address(0));
+          return (uint(mappings[msg.sender].etype));
+    }
+
+
+}

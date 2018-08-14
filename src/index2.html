@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Person Login</title>
+
+<!-- Bootstrap Core CSS -->
+<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="./css/index.css" />
+
+<script src="js/lib/jquery.min.js"></script>
+<script src="js/lib/web3.min.js"></script>
+<script src="js/lib/truffle-contract.js"></script>
+
+<script src="js/index.js"></script>
+
+<script type="text/javascript">
+	$(function() {
+		$(window).load(function() {
+			App.init();
+		});
+
+		$("#personRegisterForm").submit(function(event) {
+			App.employeeSignUp();
+			event.preventDefault();
+		});
+		$("#personLoginForm").submit(function(event) {
+			App.employeeLogin();
+			event.preventDefault();
+		});
+	});
+</script>
+
+</head>
+
+<body>
+
+	<div class="container">
+
+		<header>
+			<h1>Person Login</h1>
+		</header>
+
+		<section>
+			<div id="container_demo">
+				<a class="hiddenanchor" id="toregister"></a> <a class="hiddenanchor"
+					id="tologin"></a>
+
+				<div id="wrapper">
+					<div id="login" class="animate form">
+						<form id="personLoginForm" style="padding: 18px 6% 10px 6%">
+							<h1>Log in</h1>
+							<p>
+								<label for="l_username"> Username </label> <input
+									id="l_username" class="bgcTextField" required type="text"
+									placeholder="Your Bockchain Address" />
+							</p>
+							<p>
+								<label for="l_password"> Password </label> <input
+									id="l_password" class="bgcTextField" required type="password"
+									placeholder="eg. Password" />
+							</p>
+							<p style="text-align: right; margin-top: 10px">
+								<input type="submit" class="button" value="Log In" />
+							</p>
+							<p class="change_link">
+								Not a member yet ? <a href="#toregister" class="to_register">Join
+									us</a>
+							</p>
+						</form>
+					</div>
+
+					<div id="register" class="animate form">
+						<form id="personRegisterForm" style="padding: 18px 6% 10px 6%">
+							<h1>Sign up</h1>
+							<p>
+								<label for="r_username">Username</label> <input id="r_username"
+									class="bgcTextField" required type="text"
+									placeholder="Your Bockchain Address" />
+							</p>
+							<p>
+								<label for="password">Password</label> <input id="r_password"
+									class="bgcTextField" required type="password"
+									placeholder="eg.Your Password" />
+							</p>
+							<p>
+								<label for="password_confirm">Confirm your password</label> <input
+									id="password_confirm" name="password_confirm"
+									class="bgcTextField" required type="password"
+									placeholder="eg.Your Password" />
+							</p>
+							<p style="text-align: right; margin-top: 10px;">
+								<input type="submit" class="button" value="Sign up" />
+							</p>
+							<p class="change_link">
+								Already a member ? <a href="#tologin" class="to_register">
+									Go and log in </a>
+							</p>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+
+</html>

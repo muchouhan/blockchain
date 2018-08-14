@@ -1,0 +1,116 @@
+var App = artifacts.require("./App.sol");
+
+// test suite
+contract('App', function(accounts){
+  it("should be initialized with zero", function() {
+    return App.deployed().then(function(instance) {
+      return instance.isUniversityExist({from:web3.eth.accounts[0]});
+    }).then(function(data) {
+      assert.equal(data, false, "University size must be zero");
+    })
+  });
+
+  it("should be initialized with two contract person and University", function() {
+    var instance;
+
+      return App.deployed().then(function(inst) {
+        instance = inst;
+      }).then(function(data) {
+        return instance.isPersonExist({from:web3.eth.accounts[0]});
+      }).then(function(data) {
+        //console.log("Person exist:"+data);
+        assert.equal(data, false, "Person size must be zero");
+        return instance.addPerson(web3.fromAscii("P first"),"P middle","P last", "P occupation","P income","02-07-2000",
+                                  "M","P rAddress1","P rAddress2","8839202104",
+                                  "mukundchouhan220@gmail.com","India",{from:web3.eth.accounts[0]});
+      }).then(function(data){
+          //console.log("Receipt:"+data.tx);
+          return instance.isPersonExist({from:web3.eth.accounts[0]});
+      }).then(function(data) {
+        assert.equal(data, true, "Person size must be 1");
+        return instance.getPerson({from:web3.eth.accounts[0]});
+      }).then(function(data){
+          var fName =web3.toAscii(data[1]).replace(/\u0000/g, '');
+          var lName =web3.toAscii(data[3]).replace(/\u0000/g, '');
+          //console.log("Person:"+fName);
+          assert.equal(data[0], web3.eth.accounts[0], "Person address must be "+web3.eth.accounts[0]);
+          assert.equal(fName, "P first", "Person first name must be P first");
+          assert.equal(lName, "P last", "University RegNo must be RegNo 1");
+      }).then(function(data) {
+        return instance.isUniversityExist({from:web3.eth.accounts[1]});
+      }).then(function(data) {
+        assert.equal(data, false, "University size must be zero");
+        return instance.addUniversity("University 1","RegNo 1",{from:web3.eth.accounts[1]});
+      }).then(function(data){
+          return instance.isUniversityExist({from:web3.eth.accounts[1]});
+      }).then(function(data) {
+        assert.equal(data, true, "University size must be 1");
+        return instance.enrollPerson(web3.eth.accounts[0],{from:web3.eth.accounts[1]});
+      }).then(function(data){
+        //  console.log("receipt :"+data);
+          return instance.enrollmentCount({from:web3.eth.accounts[1]});
+      }).then(function(data){
+          //console.log("Enrolled person count :"+data);
+          //assert.equal(data, 1, "Person size must be 1");
+          //return instance.getPerson(web3.eth.accounts[1],{from:web3.eth.accounts[0]});
+      }).then(function(data){
+        //  console.log(" person :"+data);
+
+     })
+    });
+
+
+  it("should be created ", function() {
+    var instance;
+    return App.deployed().then(function(inst) {
+      instance = inst;
+      return instance.isUniversityExist({from:web3.eth.accounts[0]});
+    }).then(function(data) {
+      assert.equal(data, false, "University size must be zero");
+      return instance.addUniversity("University 1","RegNo 1",{from:web3.eth.accounts[0]});
+    }).then(function(data){
+        //console.log("Receipt:"+data.tx);
+        return instance.isUniversityExist({from:web3.eth.accounts[0]});
+    }).then(function(data) {
+      assert.equal(data, true, "University size must be 1");
+      return instance.getUniversity({from:web3.eth.accounts[0]});
+    }).then(function(data){
+        console.log("University person count:"+data[3]);
+        var name =web3.toAscii(data[1]).replace(/\u0000/g, '');
+        var regNo =web3.toAscii(data[2]).replace(/\u0000/g, '');
+        assert.equal(data[0], web3.eth.accounts[0], "University address must be "+web3.eth.accounts[0]);
+        assert.equal(name, "University 1", "University name must be University 1");
+        assert.equal(regNo, "RegNo 1", "University RegNo must be RegNo 1");
+    })
+  });
+
+
+  it("should enroll to person ", function() {
+    var instance;
+    return App.deployed().then(function(inst) {
+      instance = inst;
+      return instance.isUniversityExist({from:web3.eth.accounts[3]});
+    }).then(function(data) {
+      assert.equal(data, false, "University size must be zero");
+      return instance.addUniversity("University 1","RegNo 1",{from:web3.eth.accounts[3]});
+    }).then(function(data){
+        return instance.isUniversityExist({from:web3.eth.accounts[3]});
+    }).then(function(data) {
+      assert.equal(data, true, "University size must be 1");
+      return instance.enrollPerson(web3.eth.accounts[2],{from:web3.eth.accounts[3]});
+    }).then(function(data){
+      //  console.log("receipt :"+data);
+        return instance.enrollmentCount({from:web3.eth.accounts[3]});
+    }).then(function(data){
+      //  console.log("Enrolled person count :"+data);
+        assert.equal(data, 1, "Person size must be 1");
+      //  return instance.getPerson(web3.eth.accounts[1],{from:web3.eth.accounts[0]});
+    }).then(function(data){
+        //var name =web3.toAscii(data[1]).replace(/\u0000/g, '');
+        //console.log("Enrolled person name :"+data);
+        //assert.equal(data, 1, "Person size must be 1");
+    })
+  });
+
+
+});

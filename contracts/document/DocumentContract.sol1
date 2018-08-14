@@ -1,0 +1,104 @@
+pragma solidity ^0.4.18;
+
+import "../ownership/Ownable.sol";
+import "../lifecycle/Destructible.sol";
+
+/**
+ * @title Document
+ * @dev This basic contract allows to issue documents.
+ */
+contract DocumentContract is Ownable,Destructible {
+    /**
+    *This is status enum used to indentify document status
+    */
+    enum Status {DEFAULT,APPROVED,REJECTED}
+
+    /**
+    *This is document body
+    */
+    struct Document {
+        address issuer;
+        address recipient;
+        bytes32 document;//this is only document hash value
+        bytes32 name;//name of document
+        address approver;
+        Status status ; //= Status.DEFAULT;// this is document status, used enum
+        string comments;
+    }
+
+    /**
+    *Below mapping will help to fetch contract using document Hash Value
+    */
+    mapping (bytes32 => Document) public documents;
+
+    /**
+    *write all events of document
+    */
+    event DocumentIssued(bytes32 document,address recipient,bytes32 name, string comments);
+    event DocumentApproved(bytes32 document,address approver,string comments);
+    event DocumentRejected(bytes32 document,address approver,string comments);
+
+    /**
+     * @dev Issues document.
+     */
+    function issueDocument(bytes32 _document,address _recipient, bytes32 _name,string _comment) payable public returns (bool) {
+        require(documents[_document].issuer == address(0));
+
+        documents[_document].issuer = msg.sender;
+        documents[_document].recipient = _recipient;
+        documents[_document].name = _name;
+        documents[_document].status = Status.DEFAULT;
+        documents[_document].comments=_comment;
+
+        //trigger event
+        DocumentIssued(_document,_recipient,_name,_comment);
+        return true;
+    }
+
+    /**
+     * @dev Approve document.
+     * once user approve document then add this in Person
+     */
+    function approveDocument(bytes32 _document,string _comment) payable public returns (bool) {
+        require(documents[_document].issuer != address(0));
+
+        documents[_document].approver = msg.sender;
+        documents[_document].status = Status.APPROVED;
+        documents[_document].comments=_comment;
+        //trigger event
+        DocumentApproved(_document,msg.sender,_comment);
+
+        return true;
+    }
+
+    /**
+     * @dev Reject document.
+     */
+    function rejectDocument(bytes32 _document,string _comment) payable public returns (bool) {
+        require(documents[_document].issuer != address(0));
+
+        documents[_document].approver = msg.sender;
+        documents[_document].status = Status.REJECTED;
+        documents[_document].comments = _comment;
+        //trigger event
+        DocumentRejected(_document,msg.sender,_comment);
+
+        return true;
+    }
+    /**
+
+     * @dev get document.
+     */
+     function getDocument(bytes32 _document) public view returns (address,address,bytes32,bytes32,address,uint,string){
+            require(documents[_document].issuer != address(0));
+
+            return (documents[_document].issuer,
+                    documents[_document].recipient,
+                    documents[_document].document,
+                    documents[_document].name,
+                    documents[_document].approver,
+                    uint(documents[_document].status),
+                    documents[_document].comments);
+     }
+
+}
