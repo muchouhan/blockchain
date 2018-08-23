@@ -6,6 +6,7 @@ App = {
 	  
 	 
 	  init: function() {
+//		  const express = require('express');
 		    // initialize web3
 		    if(typeof web3 !== 'undefined') {
 		      // reuse the provider of the Web3 object injected by Metamask
@@ -22,7 +23,7 @@ App = {
 	  displayAccountInfo: function() {
 		    web3.eth.getCoinbase(function(err, account) {
 		      if(err === null) {
-		    	console.log("Deploy account:"+account);
+//		    	console.log("Deploy account:"+account);
 		        App.account = account;
 		      }
 		    });
@@ -40,10 +41,6 @@ App = {
 		        App.loadOrganisationSearchPage();
 		        App.requestForVerification();
 		        App.thirdPartyVerifiedRequests();
-		        
-		        
-		        App.loadDocuments();
-		        
 		    });
 	  },
 		  
@@ -51,7 +48,7 @@ App = {
 	  loadOrganisationHomePage: function() {
 			var entity = sessionStorage.entityAddress;
 			var type = sessionStorage.e_type;
-		    console.log(type+" entity address:"+entity);
+//		    console.log(type+" entity address:"+entity);
 		    
 		    if(entity==undefined) return;
 			
@@ -65,7 +62,7 @@ App = {
 						gas: 500000
 				  });
 			}).then(function(result) {
-		        console.log("getEntity:"+result);
+//		        console.log("getEntity:"+result);
 		        var name = web3.toAscii(result[1]).replace(/\u0000/g, '');
 		        var regNo = web3.toAscii(result[2]).replace(/\u0000/g, '');
 		        var etype = result[3];
@@ -96,9 +93,9 @@ App = {
 					gas: 500000
 			  });
 			}).then(function(result) {
-		        console.log("all employee for org are :"+result);
+//		        console.log("all employee for org are :"+result);
 		        $.each(result, function( index, value ){
-            	  	console.log("now fetch details for person: "+value);
+//            	  	console.log("now fetch details for person: "+value);
 	            	instance.getPerson({
 		  	                from: value,
 		  	                gas: 500000
@@ -145,14 +142,14 @@ App = {
 						gas: 500000
 				  });
 				}).then(function(result) {
-					console.log("all ids for org are :"+result);
+//					console.log("all ids for org are :"+result);
 			        $.each(result, function( index, value ){
-	            	  	console.log("now fetch details for person: "+value.toNumber());
+//	            	  	console.log("now fetch details for person: "+value.toNumber());
 		            	instance.personVerificationDetails(value.toNumber(),{
 			  	                from: entity,
 			  	                gas: 500000
 				  	    }).then(function(result) {
-				  	    	console.log("requestForVerification id :"+value+" details are : "+result);
+//				  	    	console.log("requestForVerification id :"+value+" details are : "+result);
 				  	    	if(!web3.toBigNumber(value.toNumber()).isZero()) App.buildRequestForVerificationRow(result[0],web3.toAscii(result[1]).replace(/\u0000/g, ''),web3.toAscii(result[2]).replace(/\u0000/g, ''),web3.toAscii(result[3]).replace(/\u0000/g, ''),web3.toAscii(result[5]).replace(/\u0000/g, ''));
 			  	        }).catch(function(err) {
 			  	            console.error(err);
@@ -167,7 +164,7 @@ App = {
 		buildRequestForVerificationRow: function(personAddrs, personName, gender,email,requester ) {
 			$('table#personVerificationRequestForMe').dataTable().fnAddData( [ personAddrs,
 															  personName,
-															  gender,
+															  gender==('F'||'f') ?"Female":"Male",
 															  email,
 															  requester,
 												        '<button type="button" class="btn btn-xs btn-default" id="'+personAddrs+'" onclick="App.fetchPersonDetailsForVerification(this)" > <i class="fa">&#xf1d9;</i> </button>'
@@ -187,7 +184,7 @@ App = {
 					gas: 500000
 			  });
 			}).then(function(result) {
-				console.log("Person detials from popup :"+result);
+//				console.log("Person detials from popup :"+result);
 				var fName = web3.toAscii(result[1]).replace(/\u0000/g, '');
 	            var occupation = web3.toAscii(result[2]).replace(/\u0000/g, '');
 	            var dob = web3.toAscii(result[4]).replace(/\u0000/g, '');
@@ -207,8 +204,29 @@ App = {
 	            $('#personDetailsForVerificationPopupMobile').val(result[8]);
 	            $('#personDetailsForVerificationPopupEmail').val(email);
 	            $('#personDetailsForVerificationPopupCountry').val(country);
-//				App.buildPersonDocumentForVerificationRow("Ade014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. II","Mukund Chouhan","Approved","Approved");
-//				App.buildPersonDocumentForVerificationRow("tut014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. III","Mukund Chouhan","Approved","Approved");
+	            $('#personForVerificationPopupPersonPhotoId').attr('src',result[11]);
+	            var table = $('#personDetailsForVerificationPopupDocuments').DataTable();
+	            table.clear().draw();
+	            
+	            $.each(result[12], function( index, value ){
+	            	if(!web3.toBigNumber(value).isZero()) {
+		            	instance.getDocument(value,{
+		  	                from: ele.id,
+		  	                gas: 500000
+				  	    }).then(function(result) {
+//			  	          console.log("Document result:" + result);
+			  	          App.buildPersonDocumentForVerificationRow(web3.toAscii(result[1]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[0]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[2]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[3]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[4]).replace(/\u0000/g, ''),
+			  	        		  					 result[5],
+			  	        		  					 result[6]);
+				  	    }).catch(function(err) {
+			  	            console.error(err);
+			  	        });
+	            	}
+        	   });
 
 				$('#fetchPersonDetailsForVerificationPopup').css('display', 'block');    
 				
@@ -217,19 +235,31 @@ App = {
 			});
 		},
 		
-		buildPersonDocumentForVerificationRow: function(document, issuer, docName,approver,status,comments ) {
-			$('table#personDetailsForVerificationPopupDocuments').dataTable().fnAddData( [ document,
-														issuer,
-														docName,
-														status,
-												        '<button type="button" class="btn btn-xs btn-default" id="'+document+'" onclick="App.downloadDocument(this)" > <i class="fa">&#xf019;</i> </button>'
-														]);
+		buildPersonDocumentForVerificationRow: function(document, docName,docExt,issuer,approver,status,comments) {
+			$('table#personDetailsForVerificationPopupDocuments').dataTable().fnAddData( [  document,
+																							docName,
+																							issuer,
+																							approver,
+																							App.getStatusLabel(status),
+																							comments,
+																							'<a class="btn btn-xs btn-default command-delete" download="'+docName+'" href="http://localhost:5000/uploads//'+document+"."+docExt+'">'+
+																							'<i class="fa" style="cursor: pointer; font-size: 12px;  padding: 0; margin-bottom: 0px; width: 15px; height: 15px;">&#xf019;</i>'+
+																							'</a>'
+																							]);
 		},
-		
-		downloadDocument:function(ele){
-			console.log(ele.id);
+		getStatusLabel:function(id){
+			switch (id.toString()) {
+		    case "0":
+		        return "Uploaded";
+		    case "1":
+		    	return "Approved";
+		    case "2":
+		    	return "Rejected";
+		    default:
+		    	return "";
+			}
 		},
-		
+
 		thirdPartyVerifiedRequests: function() {
 			var entity = sessionStorage.entityAddress;
 			var type = sessionStorage.e_type;
@@ -245,20 +275,21 @@ App = {
 					gas: 500000
 			  });
 			}).then(function(result) {
-		        console.log("all ids for org are :"+result);
+//		        console.log("all ids for org are :"+result);
 		        $.each(result, function( index, value ){
-            	  	console.log("now fetch details for person: "+value.toNumber());
+//            	  	console.log("now fetch details for person: "+value.toNumber());
 	            	instance.personVerificationDetails(value.toNumber(),{
 		  	                from: entity,
 		  	                gas: 500000
 			  	    }).then(function(result) {
-			  	    	console.log("thirdPartyVerifiedRequests Address :"+web3.toBigNumber(value.toNumber()).isZero()+"Person id :"+value+" details are : "+result);
+//			  	    	console.log("thirdPartyVerifiedRequests Address :"+web3.toBigNumber(value.toNumber()).isZero()+"Person id :"+value+" details are : "+result);
 			  	    	if(!web3.toBigNumber(value.toNumber()).isZero()) App.buildThirdPartyVerifiedRequestRow(result[0],
 			  	    														web3.toAscii(result[1]).replace(/\u0000/g, ''),
 			  	    														result[8],
 			  	    														web3.toAscii(result[9]).replace(/\u0000/g, ''),
 			  	    														result[6],
-			  	    														result[7]
+			  	    														result[7],
+			  	    														result[10]
 			  	    														);
 		  	        }).catch(function(err) {
 		  	            console.error(err);
@@ -270,24 +301,67 @@ App = {
 			
 		},
 
-		buildThirdPartyVerifiedRequestRow: function(personAddrs, personName, orgAddrs,orgName,status,comments ) {
+		buildThirdPartyVerifiedRequestRow: function(personAddrs, personName, orgAddrs,orgName,status,comments,id ) {
+			var entity = sessionStorage.entityAddress;
 			$('table#thirdPartyVerifiedRequest').dataTable().fnAddData( [ personAddrs,
 															  personName,
 															  orgAddrs,
 															  orgName,
-															  status,
+															  App.getStatusLabel(status),
 															  comments,
-												        '<button type="button" class="btn btn-xs btn-default command-delete" id="'+personAddrs+'" onclick="App.shareVerifiaction(this)" > <i class="fa">&#xf1d9;</i> </button>'
+												        '<button type="button" class="btn btn-xs btn-default command-delete" id="'+id+'" onclick="App.shareVerifiaction(this)" > <i class="fa">&#xf1d9;</i> </button>'
 														]);
 		},
 		
 		shareVerifiaction:function(ele){
-			//sharePersonVerificationResult
+			//load details in popup
+			var entity = sessionStorage.entityAddress;
+					
+			App.contracts.BGC.deployed().then(function(instance) {
+              return instance.personVerificationDetails(ele.id,{
+	                from: entity,
+	                gas: 500000
+	          });
+		    }).then(function(result) {
+//		    console.log("person details "+result);
+		    	$('#sharePersonUserId').val(result[10]);
+		    	$('#sharePersonUserAddress').val(result[0]);
+		    	$('#sharePersonFullName').val(web3.toAscii(result[1]).replace(/\u0000/g, ''));
+				$('#sharePersonVerifiedBy').val(web3.toAscii(result[9]).replace(/\u0000/g, ''));
+				$('#sharePersonVerifiactionStatus').val(result[6].toString());
+				$('#sharePersonVerifiactionComments').val(result[7]);
+	        }).catch(function(err) {
+	            console.error(err);
+	        });
+			
 			$('#sharePersonVerifiactionPopup').css('display', 'block');	
+		},
+		
+		shareProfileWithOrganisation:function(){
+			//share with org
+			var entity = sessionStorage.entityAddress;
+			var id = $('#sharePersonUserId').val();
+			var org = $('#sharePersonVerifiactionOrgAddress').val();
+//			console.log("share id:"+id+"\t"+org);
+			App.contracts.BGC.deployed().then(function(instance) {
+	              return instance.sharePersonVerificationResult(id,org,{
+		                from: entity,
+		                gas: 500000
+		          });
+		    }).then(function(result) {
+		    	alert("person details have been shared and receipt:"+result);
+		    	location.reload();
+	        }).catch(function(err) {
+	            console.error(err);
+	        });
+			$('#sharePersonVerifiactionPopup').css('display', 'none');
 		},
 	
 		updatePersonAddDocumentPopup: function(ele) {
-			 $('#organisationUpdatePersonAddDocumentPopup').css('display', 'block');
+			var _recipient = $('#organisationUpdatePersonUserAddress').val();
+			$('#userDocAddressId').val(_recipient);
+			
+			$('#organisationUpdatePersonAddDocumentPopup').css('display', 'block');
 		},
 		rejectUpdatePersonDocument:function(){
 			$('#organisationUpdatePersonAddDocumentPopup').css('display', 'none');
@@ -304,12 +378,13 @@ App = {
 		                gas: 500000
 		          });
 			    }).then(function(result) {
-			    	console.log("person details have been approved by organisation");
+//			    	console.log("person details have been approved by organisation");
 		        }).catch(function(err) {
 		            console.error(err);
 		        });
 				
 				$('#fetchPersonDetailsForVerificationPopup').css('display', 'none');
+				location.reload();
 		},
 		
 		rejectPersonVerificationDetails:function(){
@@ -317,38 +392,42 @@ App = {
 		},
 		
 		
-		
-		loadDocuments: function() {
-//			App.buildDocumentRow("67e014aaf5dca488057592ee47305d9b3e10","Gujrati School","10 Marksheet","Mukund Chouhan","Approved","Approved");
-//			App.buildDocumentRow("46e014aaf5dca488057592ee47305d9b3e10","Gujrati School","12 Marksheet","Mukund Chouhan","Approved","Approved");
-//			App.buildDocumentRow("76e014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. I","Mukund Chouhan","Approved","Approved");
-//			App.buildDocumentRow("Ade014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. II","Mukund Chouhan","Approved","Approved");
-//			App.buildDocumentRow("tut014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. III","Mukund Chouhan","Approved","Approved");
-		},
-		buildDocumentRow: function(document, issuer, docName,approver,status,comments ) {
+		buildDocumentRow: function(document, docName,docExt,issuer,approver,status,comments ) {
 			$('table#updatePersonDocuments').dataTable().fnAddData( [ document,
-														issuer,
 														docName,
+														issuer,
 														approver,
-														status,
+														App.getStatusLabel(status),
 														comments,
-												        '<button type="button" class="btn btn-xs btn-default command-delete" id="'+document+'" onclick="App.downloadOrgnisationPersonDocument(this)" > <i class="fa">&#xf019;</i> </button>'+
-														'<button type="button" class="btn btn-xs btn-default command-delete" id="'+document+'" onclick="App.deleteOrganisationPersonRow(this)" > <i class="fa fa-trash"></i> </button>'
+														'<a class="btn btn-xs btn-default command-delete" download="'+docName+'" href="http://localhost:5000/uploads//'+document+"."+docExt+'">'+
+														'<i class="fa" style="cursor: pointer; font-size: 12px;  padding: 0; margin-bottom: 0px; width: 15px; height: 15px;">&#xf019;</i>'+
+														'</a>'+
+														'<button type="button" class="btn btn-xs btn-default command-delete" id="'+document+'" onclick="App.deletePersonDocumentRow(this)" > <i class="fa fa-trash"></i> </button>'
 														]);
 		},
-		saveRow:function(ele){
-		 	if (confirm("Are you sure you want to update permission.") == true) {
-		 		var canView=$('#'+ele.id+"_view").is(":checked");
-		 		var canModify=$('#'+ele.id+"_modify").is(":checked");
-		 		var canModifyDocument=$('#'+ele.id+"_document").is(":checked");
-		 		console.log("canView:"+canView+"\t canModify:"+canModify+"\tcanModifyDocument:"+canModifyDocument);
-		 	}
-		 	
-		 },
 		
-		deleteOrganisationPersonRow:function(ele){
+		deletePersonDocumentRow:function(ele){
 			if (confirm("Are you sure you want to delete document.") == true) {
 				console.log("Organisation deleted record id :"+ele.id);
+				
+				var entity = sessionStorage.entityAddress;
+				var type = sessionStorage.e_type;
+				var instance;
+				var address = $('#organisationUpdatePersonUserAddress').val();
+				
+				App.contracts.BGC.deployed().then(function(inst) {
+					 instance = inst;
+		              return instance.removeDocument(ele.id,address,{
+			                from: entity,
+			                gas: 500000
+			          });
+			    }).then(function(result) {
+			    	alert("Document has been deleted by organisation receipt:"+result);
+			    	location.reload();
+		        }).catch(function(err) {
+		            console.error(err);
+		        });
+				
 			}
 		},
 	
@@ -370,7 +449,9 @@ App = {
 		                gas: 500000
 		          });
 		    }).then(function(result) {
-		    	console.log("person has been hired by organisation");
+		    	alert("person has been hired by organisation receipt:"+result);
+//		    	console.log("person has been hired by organisation");
+		    	location.reload();
 	        }).catch(function(err) {
 	            console.error(err);
 	        });
@@ -401,7 +482,7 @@ App = {
 		                gas: 500000
 		            });
 		    }).then(function(result) {
-		    	console.log("check whether organisaton has any permission to view :" + result);
+//		    	console.log("check whether organisaton has any permission to view :" + result);
 	            if(!result[7]){
 	            	if (confirm("Access denied! Take permission from the Person to proceed") == false) {
 	    	            window.location = './organisation.html?#toverify';
@@ -422,7 +503,7 @@ App = {
 	            }	
 		    	
 	        }).then(function(result) {
-	        	console.log("result:" + result);
+//	        	console.log("result:" + result);
 	            var fName = web3.toAscii(result[1]).replace(/\u0000/g, '');
 	            var dob = web3.toAscii(result[4]).replace(/\u0000/g, '');
 	            var gender = web3.toAscii(result[5]).replace(/\u0000/g, '');
@@ -460,7 +541,7 @@ App = {
 	                gas: 500000
 	            });  	
 	        }).then(function(result) {
-	        	console.log("result:" + result);
+//	        	console.log("result:" + result);
 	            var fName = web3.toAscii(result[1]).replace(/\u0000/g, '');
 	            var regNo = web3.toAscii(result[2]).replace(/\u0000/g, '');
 	            $('#verificatinoOrgFullName').val(fName);
@@ -504,8 +585,9 @@ App = {
 	                gas: 500000
 	            });  	
 	        }).then(function(result) {
-	        	console.log("verification request receipt:" + result);
-	        
+	        	alert("verification request has been rasied receipt:"+result);
+//	        	console.log("verification request receipt:" + result);
+	        	location.reload();
 	        }).catch(function(err) {
 	            console.error(err);
 	        });
@@ -536,7 +618,7 @@ App = {
 		                gas: 500000
 		            });
 		    }).then(function(result) {
-		    	console.log("check whether organisaton has any permission to view :" + result);
+//		    	console.log("check whether organisaton has any permission to view :" + result);
 	            if(!result[7]){
 	            	if (confirm("Access denied! Take permission from the Person to proceed") == false) {
 	    	            window.location = './organisation.html?#toupdate';
@@ -558,7 +640,7 @@ App = {
 		    	
 	        }).then(function(result) {
 	            
-	        	console.log("result:" + result);
+//	        	console.log("result:" + result);
 	            var fName = web3.toAscii(result[1]).replace(/\u0000/g, '');
 	            var occupation = web3.toAscii(result[2]).replace(/\u0000/g, '');
 	            var dob = web3.toAscii(result[4]).replace(/\u0000/g, '');
@@ -577,9 +659,11 @@ App = {
 	            $('#recruitPersonMobile').val(result[8]);
 	            $('#recruitPersonEmail').val(email);
 	            $('#recruitPersonCountry').val(country);
+	            $('#recruitPersonPhotoId').attr('src',result[11]);
 	        }).catch(function(err) {
 	            console.error(err);
 	        });
+			
 		},
 		
 		updatePersonSearch: function() {
@@ -604,7 +688,7 @@ App = {
 		                gas: 500000
 		            });
 			    }).then(function(result) {
-			    	console.log("check whether organisaton has any permission to view :" + result);
+//			    	console.log("check whether organisaton has any permission to view :" + result);
 	                if(!result[7]){
 	                	if (confirm("Access denied! Take permission from the Person to proceed") == false) {
 	        	            window.location = './organisation.html?#toupdate';
@@ -636,6 +720,8 @@ App = {
 		            var raddress2 = web3.toAscii(result[7]).replace(/\u0000/g, '');
 		            var email = web3.toAscii(result[9]).replace(/\u0000/g, '');
 		            var country = web3.toAscii(result[10]).replace(/\u0000/g, '');
+		            var path = result[11];
+		            
 		            $('#organisationUpdatePersonFullName').val(fName);
 		            $('#organisationUpdatePersonOccupation').val(occupation);
 		            $('#organisationUpdatePersonIncome').val(result[3]);
@@ -646,6 +732,31 @@ App = {
 		            $('#organisationUpdatePersonMobile').val(result[8]);
 		            $('#organisationUpdatePersonEmail').val(email);
 		            $('#organisationUpdatePersonCountry').val(country);
+		            $('#personDetailsForVerificationPopupPersonPhotoId').attr('src',path);
+		            $('table#updatePersonDocuments').DataTable().clear().draw();
+		            
+		            console.log("Document :" + path);
+		            $.each(result[12], function( index, value ){
+		            	if(!web3.toBigNumber(value).isZero()) {
+			            	instance.getDocument(value,{
+			  	                from: address,
+			  	                gas: 500000
+					  	    }).then(function(result) {
+				  	          console.log("Document result:" + result);
+				  	          App.buildDocumentRow(web3.toAscii(result[1]).replace(/\u0000/g, ''),
+				  	        		  					 web3.toAscii(result[0]).replace(/\u0000/g, ''),
+				  	        		  					web3.toAscii(result[2]).replace(/\u0000/g, ''),
+				  	        		  					 web3.toAscii(result[3]).replace(/\u0000/g, ''),
+				  	        		  					 web3.toAscii(result[4]).replace(/\u0000/g, ''),
+				  	        		  					 result[5],
+				  	        		  					 result[6]);
+				  	        }).catch(function(err) {
+				  	            console.error(err);
+				  	        });
+		            	}
+            	   });
+		            
+		            
 		        }).catch(function(err) {
 		            console.error(err);
 		        });
@@ -671,8 +782,8 @@ App = {
 				var email = $('#organisationUpdatePersonEmail').val();
 				var country = $('#organisationUpdatePersonCountry').val();
 				var address = $('#organisationUpdatePersonUserAddress').val();
-				
-				console.log("organisation want to update person info for:"+address);
+				var path = $('#personDetailsForVerificationPopupPersonPhotoId').attr("src");
+//				console.log("organisation want to update person info for:"+address);
 				var instance;
 				App.contracts.BGC.deployed().then(function(inst) {
 					instance = inst;
@@ -681,7 +792,7 @@ App = {
 		                gas: 500000
 		            });
 		        }).then(function(result) {
-		            console.log("isPersonExist:" + result);
+//		            console.log("isPersonExist:" + result);
 	                if(!result){
 			            return new Promise(function(resolve, reject) {
 		                    reject(new Error('Given Person address does not exist in network!'));
@@ -692,7 +803,7 @@ App = {
 		                gas: 500000
 		            });
 		        }).then(function(result) {
-		            console.log("check whether organisaton has any permission to view :" + result);
+//		            console.log("check whether organisaton has any permission to view :" + result);
 	                if(!result[7]){
 	                	if (confirm("Access denied! Take permission from the Person to proceed") == false) {
 	        	            window.location = './organisation.html?#toupdate';
@@ -706,17 +817,105 @@ App = {
 				          });	
 	        	        }
 	                }else{
-	                	return instance.updatePerson(fName,occupation,income,dob,gender,rAddress1,rAddress2,mobile,email,country,{
+	                	return instance.updatePerson(fName,occupation,income,dob,gender,rAddress1,rAddress2,mobile,email,country,path,{
 			                from: address,
 			                gas: 500000
 			          });  	
 	                }
 	              
 		        }).then(function(result) {
-		        	console.log(" receipt:" + result);
+		        	alert("Person details has been updated receipt:"+result);
+//		        	console.log(" receipt:" + result);
+		        	location.reload();
 		        }).catch(function(err) {
 		            console.error(err);
 		        });
 				
 		},
+		
+        uploadPersonDocument:function(){
+        	var entity = sessionStorage.entityAddress;
+		    
+			if(entity==undefined) {
+				console.log("Login Organisation details not found ");
+				return;
+			}
+		
+        	var _recipient = $('#userDocAddressId').val();
+			var _document = $('#userDocId').val();
+			var _ext = $('#userDocExt').val();
+			var _name = $('#userDocName').val();
+			var _comment = $('#userDocComment').val();
+			
+			App.contracts.BGC.deployed().then(function(inst) {
+				 instance = inst;
+	            return instance.isPersonExist({
+	                from: _recipient,
+	                gas: 500000
+	            });
+	        }).then(function(result) {
+	        	if(!result){
+	        		return new Promise(function(resolve, reject) {
+	                    reject(new Error('Given person address does not exist in network!'));
+	                });
+	        	}
+	        	return instance.isEntityExist({
+	                from: entity,
+	                gas: 500000
+	            });
+		    }).then(function(result) {
+		    	if(!result){
+	        		return new Promise(function(resolve, reject) {
+	                    reject(new Error('Given organisation address does not exist in network!'));
+	                });
+	        	}
+		    	
+		    	return instance.issueDocument(_document, _ext,_recipient, _name,_comment,{
+	                from: entity,
+	                gas: 500000
+	            });
+		    }).then(function(result) {
+		    	console.log("Document uploaded:" + result);
+		    	location.reload();
+	        }).catch(function(err) {
+	            console.error(err);
+	        });
+		},
+		
+		changeProfilePhoto: function (event) {
+			
+			// Get form
+		    var form = $('#profileUploader')[0];
+
+			// Create an FormData object 
+		    var formData = new FormData(form);
+		    formData.append('photos[]', event.target.files[0], event.target.files[0].name);
+			
+		    $.ajax({
+		        url: 'http://localhost:5000/upload_photos',
+		        method: 'post',
+		        data: formData,
+		        processData: false,
+		        contentType: false,
+		        xhr: function () {
+		            var xhr = new XMLHttpRequest();
+		            return xhr;
+		        }
+		    }).done(function (data){
+		    	 if (data.length > 0) {
+		    	        var img = data[0];
+		    	        console.log(img);
+		    	        if (img.status) {
+		    	        	var path = "http://localhost:5000/"+img.publicPath;
+		    	        	$('#personDetailsForVerificationPopupPersonPhotoId').attr("src", path);
+		    	        	console.log("img:"+path);
+			    	    }
+		    	 } else {
+	    	        alert('No images were uploaded.')
+	    	     }
+		    }).fail(function (xhr, status) {
+		        alert(status);
+		    });
+		}
+
 };

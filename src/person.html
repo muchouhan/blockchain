@@ -106,9 +106,12 @@
 														class="bgcTextField" style="width: 80px;" type="text"
 														value="" /></td>
 													<td><label>Gender : </label></td>
-													<td><input disabled="disabled" id="gender"
-														class="bgcTextField" style="width: 80px;" type="text"
-														value="" /></td>
+													<td>
+															<select disabled="disabled" id="gender" class="bgcDropdown" style="width: 80px; background-color: rgb(235, 235, 228);">
+															  <option value="m">Male</option>
+															  <option value="f">Female</option>
+															</select>
+													</td>
 
 													<td><label>Mobile : </label></td>
 													<td><input disabled="disabled" id="mobile"
@@ -135,9 +138,9 @@
 
 										<td>
 											<div
-												style="margin-left:10px; width: 126px; height: 130px; border: thin;">
+												style="margin-left:10px; border: thin;">
 												<img id="personPhotoId" src="images\img_avatar3.png"
-													alt="Person" style="width: 100%">
+													alt="Person" style="width: 125px; height: 135px; ">
 
 											</div>
 										</td>
@@ -147,8 +150,8 @@
 									<thead>
 										<tr>
 											<th>Document ID</th>
-											<th>Issuer</th>
 											<th>Document Name</th>
+											<th>Issuer</th>
 											<th>Approver</th>
 											<th>Status</th>
 											<th>Comments</th>
@@ -226,37 +229,41 @@
 													<td colspan="3"><input id="popupUserDocId"
 														class="bgcTextField" style="width: 320px;"
 														disabled="disabled" required type="text"
-														value="46e014aaf5dca488057592ee47305d9b3e10" /></td>
+														value="" />
+														</td>
 
 													<td>
-														<button class="button"
-															onclick="App.downloadPersonDocument();"
-															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
-															<i class="fa">&#xf019;</i>
-														</button>
+														<a id="personDocumentPath" class="button" style="margin-left: 5px" >
+															<i class="fa" style="cursor: pointer; font-size: 17px;  padding: 0; margin-bottom: 0px; width: 20px; height: 30px;">&#xf019;</i>
+														</a>
 													</td>
 													<td><label>Issuer : </label></td>
 													<td colspan="3"><input disabled="disabled"
 														id="popupIssuer" class="bgcTextField"
 														style="width: 250px;" type="text"
-														value="Vikram University" /></td>
+														value="" /></td>
 												</tr>
 												<tr>
 													<td><label>Document Name : </label></td>
 													<td colspan="1"><input disabled="disabled"
 														id="popupDocName" class="bgcTextField"
-														style="width: 150px;" type="text" value="10 Marksheet" /></td>
+														style="width: 150px;" type="text" value="" /></td>
 													<td><label>Status : </label></td>
 
-													<td><input disabled="disabled" id="popupDocStatus"
-														class="bgcTextField" style="width: 90px;" type="text"
-														value="Uploaded" /></td>
+													<td>
+														<select disabled="disabled" class="bgcDropdown" id="popupDocStatus" style="width: 90px;background-color: rgb(235, 235, 228);" >
+														  <option value="0">Uploaded</option>
+														  <option value="1">Approved</option>
+														  <option value="2">Rejected</option>
+														</select>
+														
+														</td>
 													<td></td>
 													<td><label>Comments : </label></td>
 													<td><input disabled="disabled"
 														id="poupDocIssuerComment" class="bgcTextField"
 														style="width: 250px;" type="text"
-														value="check your document and approve" /></td>
+														value="" /></td>
 												</tr>
 												<tr>
 													<td colspan="7"><textarea style="resize: none;"

@@ -23,7 +23,7 @@ App = {
 	  displayAccountInfo: function() {
 	    web3.eth.getCoinbase(function(err, account) {
 	      if(err === null) {
-	    	console.log("Deploy account:"+account);
+//	    	console.log("Deploy account:"+account);
 	        App.account = account;
 	      }
 	    });
@@ -36,8 +36,6 @@ App = {
 	        App.contracts.BGC.setProvider(App.web3Provider);
 	        App.loadUniversityHome();
 	        App.loadUniversitySearchPage();
-	        
-	        App.loadUniversityPersonDocuments();
 	    });
 	  },
 	  
@@ -45,7 +43,7 @@ App = {
 	 loadUniversityHome: function() {
 		var entity = sessionStorage.entityAddress;
 		var type = sessionStorage.e_type;
-	    console.log(type+" entity address:"+entity);
+//	    console.log(type+" entity address:"+entity);
 	    
 	    if(entity==undefined) return;
 		
@@ -59,7 +57,7 @@ App = {
 					gas: 500000
 			  });
 		}).then(function(result) {
-	        console.log("getEntity:"+result);
+//	        console.log("getEntity:"+result);
 	        var name =web3.toAscii(result[1]).replace(/\u0000/g, '');
 	        var regNo =web3.toAscii(result[2]).replace(/\u0000/g, '');
 	        var etype = result[3];
@@ -91,9 +89,9 @@ App = {
 					gas: 500000
 			  });
 			}).then(function(result) {
-		        console.log("all employee for org are :"+result);
+//		        console.log("all employee for org are :"+result);
 		        $.each(result, function( index, value ){
-         	  	console.log("now fetch details for person: "+value);
+//         	  	console.log("now fetch details for person: "+value);
 	            	instance.getPerson({
 		  	                from: value,
 		  	                gas: 500000
@@ -101,7 +99,7 @@ App = {
 		  	            App.buildUniversityPersonRow(result[0],web3.toAscii(result[1]).replace(/\u0000/g, ''),web3.toAscii(result[5]).replace(/\u0000/g, ''),web3.toAscii(result[9]).replace(/\u0000/g, ''),result[6],result[7],result[8]);
 		  	        }).catch(function(err) {
 		  	            console.error(err);
-		  	        });	
+		  	        });
 		        });
 		    }).catch(function(err) {
 				  console.error(err);
@@ -112,7 +110,7 @@ App = {
 		 buildUniversityPersonRow: function(addrs, name, gender,email,canView,canModify,canModifyDocument ) {
 				$('table#universityPersons').dataTable().fnAddData( [ addrs,
 															name,
-															gender=='M' ?"Male":"Female",
+															gender.toUpperCase()=='M' ?"Male":"Female",
 															email,
 															'<button type="button" class="btn btn-xs btn-default " id="'+addrs+'" onclick="App.deleteUniversityPersonRow(this)" > <i class="fa fa-trash"></i> </button>'
 															
@@ -149,7 +147,7 @@ App = {
 	                gas: 500000
 	            });
 		    }).then(function(result) {
-		    	console.log("check whether university has any permission to view :" + result);
+//		    	console.log("check whether university has any permission to view :" + result);
               if(!result[7]){
               	if (confirm("Access denied! Take permission from the Person to proceed") == false) {
       	            window.location = './university.html?#toupdate';
@@ -172,7 +170,7 @@ App = {
 	                gas: 500000
 	            });  	
 	        }).then(function(result) {
-	        	console.log("result:" + result);
+//	        	console.log("result:" + result);
 	            var fName = web3.toAscii(result[1]).replace(/\u0000/g, '');
 	            var occupation = web3.toAscii(result[2]).replace(/\u0000/g, '');
 	            var dob = web3.toAscii(result[4]).replace(/\u0000/g, '');
@@ -191,6 +189,30 @@ App = {
 	            $('#updateUniversityPersonMobile').val(result[8]);
 	            $('#updateUniversityPersonEmail').val(email);
 	            $('#updateUniversityPersonCountry').val(country);
+	            $('#updateUniversityPersonPhotoId').attr('src',result[11]);
+	            
+	            
+	            $.each(result[12], function( index, value ){
+	            	if(!web3.toBigNumber(value).isZero()) {
+		            	instance.getDocument(value,{
+		  	                from: address,
+		  	                gas: 500000
+				  	    }).then(function(result) {
+//			  	          console.log("Document result:" + result);
+			  	          App.buildUniversityPersonDocumentRow(web3.toAscii(result[1]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[0]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[2]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[3]).replace(/\u0000/g, ''),
+			  	        		  					 web3.toAscii(result[4]).replace(/\u0000/g, ''),
+			  	        		  					 result[5],
+			  	        		  					 result[6]);
+				  	    }).catch(function(err) {
+			  	            console.error(err);
+			  	        });
+	            	}
+        	   });
+	            
+	            
 	        }).catch(function(err) {
 	            console.error(err);
 	        });
@@ -219,7 +241,7 @@ App = {
 	                gas: 500000
 	            });
 		    }).then(function(result) {
-		    	console.log("check whether university has any permission to view :" + result);
+//		    	console.log("check whether university has any permission to view :" + result);
                 if(!result[7]){
                 	if (confirm("Access denied! Take permission from the Person to proceed") == false) {
         	            window.location = './university.html?#toupdate';
@@ -242,7 +264,7 @@ App = {
 	                gas: 500000
 	            });  	
 	        }).then(function(result) {
-	        	console.log("result:" + result);
+//	        	console.log("result:" + result);
 	            var fName = web3.toAscii(result[1]).replace(/\u0000/g, '');
 	            var occupation = web3.toAscii(result[2]).replace(/\u0000/g, '');
 	            var dob = web3.toAscii(result[4]).replace(/\u0000/g, '');
@@ -280,50 +302,107 @@ App = {
 			                gas: 500000
 			          });
 			    }).then(function(result) {
-			    	console.log("person has been enrolled in University");
+//			    	console.log("person has been enrolled in University");
+			    	location.reload();
 		        }).catch(function(err) {
 		            console.error(err);
 		        });
 				
 		 },
 	  
-		 
-		 loadUniversityPersonDocuments: function() {
-//				App.buildUniversityPersonDocumentRow("67e014aaf5dca488057592ee47305d9b3e10","Gujrati School","10 Marksheet","Mukund Chouhan","Approved","Approved");
-//				App.buildUniversityPersonDocumentRow("46e014aaf5dca488057592ee47305d9b3e10","Gujrati School","12 Marksheet","Mukund Chouhan","Approved","Approved");
-//				App.buildUniversityPersonDocumentRow("76e014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. I","Mukund Chouhan","Approved","Approved");
-//				App.buildUniversityPersonDocumentRow("Ade014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. II","Mukund Chouhan","Approved","Approved");
-//				App.buildUniversityPersonDocumentRow("tut014aaf5dca488057592ee47305d9b3e10","Vikram University","B.Sc. III","Mukund Chouhan","Approved","Approved");
+		buildUniversityPersonDocumentRow: function(document, docName,docExt,issuer,approver,status,comments) {
+			$('table#universityPersonDocuments').dataTable().fnAddData( [  document,
+																							docName,
+																							issuer,
+																							approver,
+																							status,
+																							comments,
+																							'<a class="btn btn-xs btn-default command-delete" download="'+docName+'" href="http://localhost:5000/uploads//'+document+"."+docExt+'">'+
+																							'<i class="fa" style="cursor: pointer; font-size: 12px;  padding: 0; margin-bottom: 0px; width: 15px; height: 15px;">&#xf019;</i>'+
+																							'</a>'+
+																							'<button type="button" class="btn btn-xs btn-default command-delete" id="'+document+'" onclick="App.deleteUniversityPersonRow(this)" > <i class="fa fa-trash"></i> </button>'
+																							]);
 		},
-	
-		buildUniversityPersonDocumentRow: function(document, issuer, docName,approver,status,comments ) {
-			$('table#universityPersonDocuments').dataTable().fnAddData( [ document,
-														issuer,
-														docName,
-														approver,
-														status,
-														comments,
-												        '<button type="button" class="btn btn-xs btn-default" id="'+document+'" onclick="App.downloadUniversityPersonDocument(this)" > <i class="fa">&#xf019;</i> </button>'+
-														'<button type="button" class="btn btn-xs btn-default" id="'+document+'" onclick="App.deleteUniversityPersonRow(this)" > <i class="fa fa-trash"></i> </button>'
-														]);
-		},
-		
-		downloadUniversityPersonDocument:function(ele){
-			console.log("University want to download person document id :"+ele.id);
-		},
-		
+
 		deleteUniversityPersonRow:function(ele){
 			if (confirm("Are you sure you want to delete document.") == true) {
-				console.log("deleted record id :"+ele.id);
+//				console.log("deleted record id :"+ele.id);
+				var entity = sessionStorage.entityAddress;
+				var type = sessionStorage.e_type;
+				var instance;
+				var address = $('#updateUniversityPersonAddress').val();
+				
+				App.contracts.BGC.deployed().then(function(inst) {
+					 instance = inst;
+		              return instance.removeDocument(ele.id,address,{
+			                from: entity,
+			                gas: 500000
+			          });
+			    }).then(function(result) {
+			    	alert("Document has been deleted by university receipt:"+result);
+			    	location.reload();
+		        }).catch(function(err) {
+		            console.error(err);
+		        });
 			}
 		},
 	 
 		addUniversityPersonDocument: function(ele) {
-			 $('#addUniversityPersonDocumentPopup').css('display', 'block');	 
+			var _recipient = $('#updateUniversityPersonAddress').val();
+			$('#userDocAddressId').val(_recipient);
+			
+			$('#addUniversityPersonDocumentPopup').css('display', 'block');	 
 		},
-		submitUniversityPersonDocument: function(ele) {
-			console.log("University want to submit person document id :"+ele.id);
+		
+		uploadPersonDocument:function(){
+        	var entity = sessionStorage.entityAddress;
+		    
+			if(entity==undefined) {
+				console.log("Login Organisation details not found ");
+				return;
+			}
+		
+        	var _recipient = $('#userDocAddressId').val();
+			var _document = $('#userDocId').val();
+			var _ext = $('#userDocExt').val();
+			var _name = $('#userDocName').val();
+			var _comment = $('#userDocComment').val();
+			
+			App.contracts.BGC.deployed().then(function(inst) {
+				 instance = inst;
+	            return instance.isPersonExist({
+	                from: _recipient,
+	                gas: 500000
+	            });
+	        }).then(function(result) {
+	        	if(!result){
+	        		return new Promise(function(resolve, reject) {
+	                    reject(new Error('Given person address does not exist in network!'));
+	                });
+	        	}
+	        	return instance.isEntityExist({
+	                from: entity,
+	                gas: 500000
+	            });
+		    }).then(function(result) {
+		    	if(!result){
+	        		return new Promise(function(resolve, reject) {
+	                    reject(new Error('Given University address does not exist in network!'));
+	                });
+	        	}
+		    	
+		    	return instance.issueDocument(_document, _ext,_recipient, _name,_comment,{
+	                from: entity,
+	                gas: 500000
+	            });
+		    }).then(function(result) {
+		    	console.log("Document uploaded:" + result);
+		    	location.reload();
+	        }).catch(function(err) {
+	            console.error(err);
+	        });
 		},
+
 		
 		
 		updateUniversityPersonDetails:function(){
@@ -346,7 +425,7 @@ App = {
 			var email = $('#updateUniversityPersonEmail').val();
 			var country = $('#updateUniversityPersonCountry').val();
 			var address = $('#updateUniversityPersonAddress').val();
-			
+			var photo= $('#updateUniversityPersonPhotoId').attr('src');
 			console.log("university want to update person info for:"+address);
 			var instance;
 			App.contracts.BGC.deployed().then(function(inst) {
@@ -381,7 +460,7 @@ App = {
 			          });	
         	        }
                 }else{
-                	return instance.updatePerson(fName,occupation,income,dob,gender,rAddress1,rAddress2,mobile,email,country,{
+                	return instance.updatePerson(fName,occupation,income,dob,gender,rAddress1,rAddress2,mobile,email,country,photo,{
 		                from: address,
 		                gas: 500000
 		          });  	
@@ -389,6 +468,7 @@ App = {
               
 	        }).then(function(result) {
 	        	console.log(" receipt:" + result);
+	        	location.reload();
 	        }).catch(function(err) {
 	            console.error(err);
 	        });
@@ -396,6 +476,41 @@ App = {
 	},
 
 		
+	changeProfilePhoto: function (event) {
+		
+		// Get form
+	    var form = $('#profileUploader')[0];
+
+		// Create an FormData object 
+	    var formData = new FormData(form);
+	    formData.append('photos[]', event.target.files[0], event.target.files[0].name);
+		
+	    $.ajax({
+	        url: 'http://localhost:5000/upload_photos',
+	        method: 'post',
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        xhr: function () {
+	            var xhr = new XMLHttpRequest();
+	            return xhr;
+	        }
+	    }).done(function (data){
+	    	 if (data.length > 0) {
+	    	        var img = data[0];
+	    	        console.log(img);
+	    	        if (img.status) {
+	    	        	var path = "http://localhost:5000/"+img.publicPath;
+	    	        	$('#updateUniversityPersonPhotoId').attr("src", path);
+	    	        	console.log("img:"+path);
+		    	    }
+	    	 } else {
+    	        alert('No images were uploaded.')
+    	     }
+	    }).fail(function (xhr, status) {
+	        alert(status);
+	    });
+	}
 		 
 		 
 		 

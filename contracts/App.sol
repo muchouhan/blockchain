@@ -5,6 +5,7 @@ import "./lifecycle/Destructible.sol";
 
 
 contract App is Ownable,Destructible {
+    
     /**
      * This is status enum used to indentify document status
      */
@@ -15,6 +16,7 @@ contract App is Ownable,Destructible {
     struct Person{
         address  addrs;
         bytes32 password;
+        string photo;
         bytes32  fName; // name of document
         bytes32  occupation;
         uint  income;
@@ -34,7 +36,6 @@ contract App is Ownable,Destructible {
         bytes32 password;
         EType etype;
         bytes32 regNo;
-        address[] trdPrtyVerfnList;
         address[]  personList;
         mapping (address => uint) personRoleNo;
     }
@@ -60,14 +61,13 @@ contract App is Ownable,Destructible {
     }
 	
 	struct Document{
+	    bytes32 name;
+        bytes32 document; // this is only document hash value
+        bytes11 ext; // extension of document
         address issuer;
         address recipient;
-        bytes32 document; // this is only document hash value
-        bytes32 name; // name of document
-        address approver;
         Status status; // = Status.DEFAULT;// this is document status, used enum
         string comments;
-        mapping (address => uint) documentIndex;
     }
 	
 	
@@ -91,9 +91,7 @@ contract App is Ownable,Destructible {
      * events
      */
     event DocumentIssued(bytes32 document,address recipient,bytes32 name, string comments);
-
     event DocumentApproved(bytes32 document,address approver,string comments);
-
     event DocumentRejected(bytes32 document,address approver,string comments);
 
     event PersonAdded(address addrs,bytes32 fName,bytes32 occupation, uint income,bytes11 dob, bytes1 gender,bytes32 rAddress1,bytes32 rAddress2,uint mobile,bytes32 email,bytes32 country);
@@ -134,7 +132,6 @@ contract App is Ownable,Destructible {
 	        return ids;
 	}
 	
-	
 	/**
 	 *This method is used to raise third party verification request
 	 * this is for org which has raised request and can see in verification tab  
@@ -154,7 +151,7 @@ contract App is Ownable,Destructible {
 	        return ids;
 	}
 	
-	function personVerificationDetails(uint _id) public view returns(address,bytes32,bytes1,bytes32,address,bytes32,uint,string,address,bytes32){
+	function personVerificationDetails(uint _id) public view returns(address,bytes32,bytes1,bytes32,address,bytes32,uint,string,address,bytes32,uint){
 	    	require(msg.sender !=address(0));
 	        require(entities[msg.sender].addrs!=address(0));
 	        
@@ -169,66 +166,68 @@ contract App is Ownable,Destructible {
 					    uint(trdPrtyVerfnRequests[i].status),
 					    trdPrtyVerfnRequests[i].comments,
 					    trdPrtyVerfnRequests[i].requestTo,
-					    entities[trdPrtyVerfnRequests[i].requestTo].name
+					    entities[trdPrtyVerfnRequests[i].requestTo].name,
+					    trdPrtyVerfnRequests[i].id
 					);	            	
 	            }
 	        }
 	}
 	
 	function approvePersonVerificationDetails(address _person,string _comments) payable public {
-		    	require(_person !=address(0));
-		        require(persons[_person].addrs!=address(0));
-		        
-		        require(msg.sender !=address(0));
-		        require(entities[msg.sender].addrs!=address(0));
-		        
-		        
-		        for(uint256 i = 0; i < trdPrtyVerfnRequests.length; i++){
-		            if(trdPrtyVerfnRequests[i].requestFor == _person 
-		                	&& trdPrtyVerfnRequests[i].requestTo==msg.sender){
-						    trdPrtyVerfnRequests[i].status = Status.APPROVED;
-						    trdPrtyVerfnRequests[i].comments = _comments;
-						    return;
-		            }
-		        }
+	    	require(_person !=address(0));
+	        require(persons[_person].addrs!=address(0));
+	        
+	        require(msg.sender !=address(0));
+	        require(entities[msg.sender].addrs!=address(0));
+	        
+	        for(uint256 i = 0; i < trdPrtyVerfnRequests.length; i++){
+	            if(trdPrtyVerfnRequests[i].requestFor == _person 
+	                	&& trdPrtyVerfnRequests[i].requestTo==msg.sender){
+					    trdPrtyVerfnRequests[i].status = Status.APPROVED;
+					    trdPrtyVerfnRequests[i].comments = _comments;
+					    return;
+	            }
+	        }
 	}
-	
 	
 	/**
 	 *This method is used to raise third party verification request
 	 * this is for org which has raised request and can see in verification tab  
 	 */
 	function sharePersonVerificationResult(uint _pid,address _target) payable public {
-		        require(msg.sender !=address(0));
-		        require(entities[msg.sender].addrs!=address(0));
-		        
-		        require(_target !=address(0));
-		        require(entities[_target].addrs!=address(0));
-				
-				trdPrtyVerfnRequests.push(TrdPrtyVerfnRequest(trdPrtyVerfnRequests.length,
-														      _target,
-														      trdPrtyVerfnRequests[_pid].requestBy ,
-														      trdPrtyVerfnRequests[_pid].requestTo,
-														      trdPrtyVerfnRequests[_pid].requestFor,
-														      trdPrtyVerfnRequests[_pid].comments,
-														      trdPrtyVerfnRequests[_pid].status
-				));
+	        require(msg.sender !=address(0));
+	        require(entities[msg.sender].addrs!=address(0));
+	        
+	        require(_target !=address(0));
+	        require(entities[_target].addrs!=address(0));
+			
+	        for(uint256 i = 0; i < trdPrtyVerfnRequests.length; i++){
+	            if(trdPrtyVerfnRequests[i].id == _pid){
+	                    trdPrtyVerfnRequests.push(TrdPrtyVerfnRequest(trdPrtyVerfnRequests.length,
+											      _target,
+											      trdPrtyVerfnRequests[i].requestBy ,
+											      trdPrtyVerfnRequests[i].requestTo,
+											      trdPrtyVerfnRequests[i].requestFor,
+											      trdPrtyVerfnRequests[i].comments,
+											      trdPrtyVerfnRequests[i].status
+												));
+					return;								
+				}
+	        }
 	}
 	
+	
 	/**
-	 * 
+	 * Profile services
 	 */
     function addProfileRequest(address _person,bool _canView,bool _canModify,bool _canModifyDocument) public{
         require(msg.sender !=address(0));
         require(_person !=address(0));
         require(persons[_person].addrs!=address(0));
         require(entities[msg.sender].addrs!=address(0));
-        profileRequest.push(ProfileRequest(_person, msg.sender, _canView,_canModify,_canModifyDocument,0,""));
+        profileRequest.push(ProfileRequest(_person, msg.sender, _canView,_canModify,_canModifyDocument,0,"Request Raised"));
     }
     
-	/**
-	 * 
-	 */
     function personProfileRequests() public view returns(address[]){
         require(msg.sender !=address(0));
         require(persons[msg.sender].addrs!=address(0));
@@ -281,22 +280,20 @@ contract App is Ownable,Destructible {
         for(uint i = 0; i < profileRequest.length; i++){
             if(profileRequest[i].requester == _sender && profileRequest[i].person == msg.sender) {
                 delete profileRequest[i];
-                return;
+                for(uint j = i+1;j < profileRequest.length; ++ j) {
+                      profileRequest[i-1] = profileRequest[i];
+              	}
+                profileRequest.length --;
             }
         }
     }
-    
 
-
-
-    function documentRequest(bool _canView,bool _canModify, address _sender) public{
+    function documentRequest(bool _canView,bool _canModify, address _sender) payable public{
         require(msg.sender !=address(0));
         require(_sender !=address(0));
         require(persons[msg.sender].addrs!=address(0));
         require(entities[_sender].addrs!=address(0));
-        for(uint i = 0;
-        i < docRequest.length;
-        ++ i){
+        for(uint i = 0; i < docRequest.length; ++ i){
             if(docRequest[i].requester== _sender && docRequest[i].person == msg.sender) {
                 docRequest[i].canView = _canView;
                 docRequest[i].canModify = _canModify;
@@ -305,79 +302,86 @@ contract App is Ownable,Destructible {
         }
     }
 
-    function documentCount() public view returns (uint){
-        return documentList.length;
-    }
-
     /**
-     * this can be done by only university
+     * this can be done by only university/Organization
      */
-    function removeDocument(bytes32 _document) payable public returns (bool){
-        // documentIndex
+    function removeDocument(bytes32 _document, address _person) payable public {
         require(documents[_document].issuer == msg.sender);
-        // delete documentList[documents[_document].documentIndex[_recipient]];
+        require(_person !=address(0));
+        require(persons[_person].addrs == _person);
+        
         delete(documents[_document]);
+        
+        for(uint i = 0; i < persons[_person].documentList.length; i++){
+            if(persons[_person].documentList[i] == _document) {
+                delete persons[_person].documentList[i];
+            }
+        }
+        
     }
 
-    function issueDocument(bytes32 _document,address _recipient, bytes32 _name,string _comment) payable public returns (bool){
+    function issueDocument(bytes32 _document, bytes11 _ext,address _recipient, bytes32 _name,string _comment) payable public{
         require(documents[_document].issuer == address(0));
         require(msg.sender !=address(0));
         require(persons[_recipient].addrs !=address(0));
+  	      
         persons[_recipient].documentList.push(_document);
+        
         documentList.push(_document);
+        documents[_document].name = _name;
+        documents[_document].document = _document;
+        documents[_document].ext = _ext;
         documents[_document].issuer = msg.sender;
         documents[_document].recipient = _recipient;
-        documents[_document].name = _name;
+        documents[_document].recipient = _recipient;
         documents[_document].status = Status.DEFAULT;
         documents[_document].comments=_comment;
         // trigger event
         DocumentIssued(_document,_recipient,_name,_comment);
-        return true;
     }
 
-    function approveDocument(bytes32 _document,string _comment) payable public returns (bool){
+    function approveDocument(bytes32 _document,string _comment) payable public {
+        require(msg.sender != address(0));
         require(documents[_document].issuer != address(0));
-        documents[_document].approver = msg.sender;
+        require(documents[_document].recipient == msg.sender);
+        
         documents[_document].status = Status.APPROVED;
         documents[_document].comments=_comment;
+        
         // trigger event
         DocumentApproved(_document,msg.sender,_comment);
-        return true;
     }
 
-    function rejectDocument(bytes32 _document,string _comment) payable public returns (bool){
+    function rejectDocument(bytes32 _document,string _comment) payable public{
+        require(msg.sender != address(0));
         require(documents[_document].issuer != address(0));
-        documents[_document].approver = msg.sender;
+        require(documents[_document].recipient == msg.sender);
+        
         documents[_document].status = Status.REJECTED;
-        documents[_document].comments = _comment;
+        documents[_document].comments=_comment;
         // trigger event
         DocumentRejected(_document,msg.sender,_comment);
-        return true;
     }
 
-    function getDocument(bytes32 _document) public view returns (address,address,bytes32,bytes32,address,uint,string){
+    function getDocument(bytes32 _document) public view returns (bytes32,bytes32,bytes11,bytes32,bytes32,uint,string){
         require(documents[_document].issuer != address(0));
-        return (documents[_document].issuer,
-                    documents[_document].recipient,
-                    documents[_document].document,
-                    documents[_document].name,
-                    documents[_document].approver,
-                    uint(documents[_document].status),
-                    documents[_document].comments);
+        return (documents[_document].name,
+        		documents[_document].document,
+                documents[_document].ext,
+                entities[documents[_document].issuer].name,
+                persons[documents[_document].recipient].fName,
+                uint(documents[_document].status),
+                documents[_document].comments);
     }
 
     /**
      * Person services
      */
-    function personCount() public view returns (uint){
-        return personList.length;
-    }
-
     function addPerson(bytes32 _fName,bytes32 _occupation,
                      uint _income,bytes11 _dob,
                      bytes1 _gender,bytes32 _rAddress1,
                      bytes32 _rAddress2,uint _mobile,
-                     bytes32 _email,bytes32 _country) payable public{
+                     bytes32 _email,bytes32 _country,string _photo) payable public{
         require(persons[msg.sender].addrs == address(0));
         personList.push(msg.sender);
         persons[msg.sender].addrs = msg.sender;
@@ -390,6 +394,7 @@ contract App is Ownable,Destructible {
         persons[msg.sender].rAddress2 =_rAddress2;
         persons[msg.sender].mobile =_mobile;
         persons[msg.sender].email =_email;
+        persons[msg.sender].photo = _photo;
         persons[msg.sender].country =_country;
         // trigger event
         PersonAdded(msg.sender,_fName,_occupation,_income,_dob,_gender,_rAddress1,_rAddress2,_mobile,_email,_country);
@@ -399,7 +404,7 @@ contract App is Ownable,Destructible {
                      uint _income,bytes11 _dob,
                      bytes1 _gender,bytes32 _rAddress1,
                      bytes32 _rAddress2,uint _mobile,
-                     bytes32 _email,bytes32 _country) payable public{
+                     bytes32 _email,bytes32 _country,string _photo) payable public{
         require(persons[msg.sender].addrs != address(0));
         personList.push(msg.sender);
         persons[msg.sender].addrs = msg.sender;
@@ -413,8 +418,17 @@ contract App is Ownable,Destructible {
         persons[msg.sender].mobile =_mobile;
         persons[msg.sender].email =_email;
         persons[msg.sender].country =_country;
+        persons[msg.sender].photo = _photo;
         // trigger event
         PersonUpdated(msg.sender,_fName,_occupation,_income,_dob,_gender,_rAddress1,_rAddress2,_mobile,_email,_country);
+    }
+    
+    function addPersonPhoto(string _photo,address _person) payable public{
+        require(_person != address(0));
+        require(persons[_person].addrs != address(0));
+        require(entities[msg.sender].addrs != address(0));
+        
+        persons[msg.sender].photo = _photo;
     }
 
     function isPersonExist() public view returns (bool){
@@ -434,7 +448,7 @@ contract App is Ownable,Destructible {
         return (persons[msg.sender].password == _password);
     }
 
-    function getPerson() public view returns (address,bytes32,bytes32,uint,bytes11,bytes1,bytes32,bytes32,uint,bytes32,bytes32,bytes32[]){
+    function getPerson() public view returns (address,bytes32,bytes32,uint,bytes11,bytes1,bytes32,bytes32,uint,bytes32,bytes32,string,bytes32[]){
         require(persons[msg.sender].addrs != address(0));
         return (persons[msg.sender].addrs,
             persons[msg.sender].fName,
@@ -447,12 +461,8 @@ contract App is Ownable,Destructible {
             persons[msg.sender].mobile,
             persons[msg.sender].email,
             persons[msg.sender].country,
+            persons[msg.sender].photo,
             persons[msg.sender].documentList);
-    }
-
-    function getPersonDocuments() public view returns (bytes32[]){
-        require(persons[msg.sender].addrs != address(0));
-        return persons[msg.sender].documentList;
     }
 
     /**
@@ -461,10 +471,6 @@ contract App is Ownable,Destructible {
     function authenticateEntity(bytes32 _password) public view returns (bool,uint){
         require(msg.sender != address(0));
         return ((entities[msg.sender].password == _password), uint(entities[msg.sender].etype));
-    }
-
-    function entityCount() public view returns (uint){
-        return entityList.length;
     }
 
     function addEntity(bytes32 _name,bytes32 _password,bytes32 _regNo,uint _etype) payable public{

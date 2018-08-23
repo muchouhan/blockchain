@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -18,11 +18,20 @@
 <script type="text/javascript" src="js/lib/dataTables.jqueryui.min.js"></script>
 <script type="text/javascript" src="js/lib/web3.min.js"></script>
 <script type="text/javascript" src="js/lib/truffle-contract.js"></script>
+
 <script src="js/organisation.js"></script>
+<script type="text/javascript" src="js/lib/file-uploader.js"></script>
 
 <script type="text/javascript" class="init">
 	$(document).ready(function() {
-
+		$('#documentSelector').bind('change', function(evt) {
+		    uploadFiles(event);
+		});
+		
+		$('#profileSelector').bind('change', function(evt) {
+		    App.changeProfilePhoto(event);
+		});
+		
 		$('#organisationPersons').DataTable({
 			"scrollX" : true,
 			"scrollY" : "285px",
@@ -95,7 +104,7 @@
 						</p>
 
 						<div style="margin-top: 20px">
-							<form onsubmit="return" style="height: 450px; margin-bottom: 1px"
+							<div style="height: 450px; margin-bottom: 1px"
 								class="well form-horizontal">
 								<fieldset>
 									<div class="form-group">
@@ -125,7 +134,7 @@
 										</div>
 									</div>
 								</fieldset>
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -141,7 +150,7 @@
 
 
 						<div style="margin-top: 20px">
-							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px; padding: 0px;"
+							<div style="height: 450px; margin-bottom: 1px; padding: 0px;"
 								class="well form-horizontal">
 								<table id="organisationPersons" class="display"
 									style="width: 100%;">
@@ -163,7 +172,7 @@
 
 								</table>
 
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -179,7 +188,7 @@
 
 
 						<div style="margin-top: 20px">
-							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px; padding: 0px;"
+							<div  style="height: 450px; margin-bottom: 1px; padding: 0px;"
 								class="well form-horizontal">
 								<table id="personVerificationRequestForMe" class="display"
 									style="width: 100%;">
@@ -198,7 +207,7 @@
 
 								</table>
 
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -213,7 +222,7 @@
 						</p>
 
 						<div style="margin-top: 20px">
-							<form onsubmit="return false;"  style="height: 450px; margin-bottom: 1px"
+							<div style="height: 450px; margin-bottom: 1px"
 								class="well form-horizontal">
 
 								<table>
@@ -249,9 +258,13 @@
 														id="verificatinoPersonDob" class="bgcTextField"
 														style="width: 125px;" type="text" value="" /></td>
 													<td><label>Gender : </label></td>
-													<td><input disabled="disabled"
-														id="verificatinoPersonGender" class="bgcTextField"
-														style="width: 150px;" type="text" value="" /></td>
+													<td>
+															<select disabled="disabled" id="verificatinoPersonGender" class="bgcDropdown" style="width: 150px; background-color: rgb(235, 235, 228);">
+															  <option value=""></option>
+															  <option value="m">Male</option>
+															  <option value="f">Female</option>
+															</select>	
+													</td>
 
 												</tr>
 												<tr>
@@ -307,9 +320,9 @@
 									<tr>
 										<td colspan="6">
 											<p style="text-align: right; margin: 5px 0;">
-												<input id="verifyPersonBtn" style="width: 130px;"
+												<input id="verifyPersonBtn" style=" text-align: center; width: 130px;"
 													onclick="App.verifyPersonByOrganisation()"
-													type="submit" class="button" value="Verify" />
+													class="button" type="button" value="Verify" />
 											</p>
 										</td>
 									</tr>
@@ -332,7 +345,7 @@
 									<tbody>
 									</tbody>
 								</table>
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -346,7 +359,7 @@
 								class="menuItem"><a href="#toupdate"> Update</a></span>
 						</p>
 						<div style="margin-top: 20px">
-							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px"
+							<div style="height: 450px; margin-bottom: 1px"
 								class="well form-horizontal">
 
 								<table>
@@ -389,9 +402,13 @@
 														id="recruitPersonDob" class="bgcTextField"
 														style="width: 100px;" type="text" value="" /></td>
 													<td><label>Gender : </label></td>
-													<td colspan="3"><input disabled="disabled"
-														id="recruitPersonGender" class="bgcTextField"
-														style="width: 105px;" type="text" value="" /></td>
+													<td colspan="3">
+														<select disabled="disabled" id="recruitPersonGender" class="bgcDropdown" style="width: 105px; background-color: rgb(235, 235, 228);">
+															  <option value=""></option>
+															  <option value="m">Male</option>
+															  <option value="f">Female</option>
+														</select>	
+													</td>
 
 												</tr>
 												<tr>
@@ -429,9 +446,9 @@
 												<tr>
 													<td colspan="6">
 														<p style="text-align: right; margin: 5px 0;">
-															<input id="recruitPersonRecruitBtn" type="submit"
+															<input id="recruitPersonRecruitBtn" style="text-align: center; width: 75px"
 																onclick="App.enrollRecruitPerson()"
-																class="button" value="Recruit" />
+																class="button" type="button" value="Recruit" />
 														</p>
 													</td>
 												</tr>
@@ -441,9 +458,9 @@
 										</td>
 										<td>
 											<div
-												style="width: 200px; height: 40px; border: thin; margin-left: -202px; margin-top: -150px;">
+												style="border: thin; margin-left: -225px; margin-top: -90px;">
 												<img id="recruitPersonPhotoId" src="images\img_avatar3.png"
-													alt="Person" style="width: 100%">
+													alt="Person" style="width: 200px; height: 200px; ">
 
 											</div>
 										</td>
@@ -451,7 +468,7 @@
 									</tr>
 								</table>
 
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -466,7 +483,7 @@
 						</p>
 
 						<div style="margin-top: 20px">
-							<form onsubmit="return" style="height: 450px; margin-bottom: 1px"
+							<div style="height: 450px; margin-bottom: 1px"
 								class="well form-horizontal">
 
 								<table>
@@ -516,9 +533,14 @@
 														style="width: 75px;" type="text" value="" /></td>
 													<td></td>
 													<td><label>Gender : </label></td>
-													<td><input id="organisationUpdatePersonGender"
-														class="bgcTextField" style="width: 80px;" type="text"
-														value="" /></td>
+													<td>
+														<select id="organisationUpdatePersonGender" class="bgcDropdown" style="width: 80px;">
+															  <option value=""></option>
+															  <option value="m">Male</option>
+															  <option value="f">Female</option>
+														</select>
+													
+													</td>
 
 													<td><label>Mobile : </label></td>
 													<td><input id="organisationUpdatePersonMobile"
@@ -546,10 +568,17 @@
 										</td>
 										<td>
 											<div
-												style="width: 105px; height: 45px; border: thin; margin-left: -110px; margin-top: -70px;">
-												<img id="organisationUpdatePersonPhotoId"
-													src="images\img_avatar3.png" alt="Person"
-													style="width: 100%">
+												style="margin-left: -130px; margin-top: -30px;">
+												<form id="profileUploader" enctype="multipart/form-data" >
+													<div >
+														<label for="profileSelector" style="cursor: pointer;color: #FFFFFF;">
+															<img id="personDetailsForVerificationPopupPersonPhotoId" src="http://localhost:5000/uploads/a5e81f19cf2c587876fd1bb08ae0249f.png" alt="Person" style="width: 120px;height: 100px">
+														</label>
+													 <input id="profileSelector" style="display: none;" type="file"/>
+													</div>
+												</form>
+
+
 
 											</div>
 										</td>
@@ -576,8 +605,8 @@
 									<thead>
 										<tr>
 											<th>Document ID</th>
-											<th>Issuer</th>
 											<th>Document Name</th>
+											<th>Issuer</th>
 											<th>Approver</th>
 											<th>Status</th>
 											<th>Comments</th>
@@ -612,7 +641,7 @@
 										</td>
 									</tr>
 								</table>
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -625,15 +654,15 @@
 	<div id="organisationUpdatePersonAddDocumentPopup"
 		class="popupbox w3-animate-opacity">
 		<!-- Modal content -->
-		<div class="modal-content" style="width: 47%; height: 300px;">
+		<div class="modal-content" style="width: 47%; height: 240px;">
 			<span class="popupClose"
 				onclick="document.getElementById('organisationUpdatePersonAddDocumentPopup').style.display='none'">&times;</span>
 			<div id="container_demo">
-				<div id="wrapper" style="width: 100%; height: 250px;">
+				<div id="wrapper" style="width: 100%; height: 200px;">
 
 					<div id="popupboxpanel" class="animate form" style="width: 100%">
 						<div style="margin-top: 20px">
-							<form onsubmit="return"  style="height: 250px; margin-bottom: 1px"
+							<div style="height: 190px; margin-bottom: 1px"
 								class="well form-horizontal">
 
 								<table>
@@ -642,38 +671,46 @@
 											<table>
 												<tr>
 													<td>
-														<button class="button"
-															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
-															<i class="fa">&#xf093;</i>
-														</button>
+														<form id="frmUploader" enctype="multipart/form-data" action="/api/Upload/" method="post">
+														<div class="button" style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px;">
+														    <label for="documentSelector" style="color: #FFFFFF;">
+														        <i class="fa fa-upload"></i>
+														    </label>
+														 <input id="documentSelector" style="display: none;" type="file"/>
+														</div>
+														</form>
 													</td>
 
 													<td><label>Document ID : </label></td>
-													<td><input id="userDocId" class="bgcTextField"
+													<td>
+													<input id="userDocAddressId" type="hidden" />
+													<input id="userDocExt" type="hidden" />
+													<input id="userDocId" class="bgcTextField"
 														style="width: 320px;" disabled="disabled" required
-														type="text" value="46e014aaf5dca488057592ee47305d9b3e10" /></td>
+														type="text" value="" /></td>
 												</tr>
 												<tr>
 													<td></td>
 													<td><label>Document Name : </label></td>
-													<td colspan="1"><input id="addressLine1"
+													<td colspan="1"><input id="userDocName"
 														class="bgcTextField" style="width: 320px;" required
-														type="text" value="10 Marksheet" /></td>
+														type="text" placeholder="e.g. 10 Marksheet" /></td>
 												</tr>
 												<tr>
 													<td colspan="7"><textarea style="resize: none;"
-															name="message" rows="4" cols="66"
+															id="userDocComment" rows="2" cols="66"
 															placeholder="Please enter your comments"></textarea></td>
 												</tr>
 												<tr>
 													<td colspan="7">
 														<p style="text-align: right; margin: 5px 0;">
-															<button title="Approve" class="button"
+															<button title="Upload" class="button"
+																onclick="App.uploadPersonDocument()";
 																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
 																<i class="fa">&#xf058;</i>
 															</button>
-															<button title="Reject" class="button"
-																onclick="App.rejectUpdatePersonDocument()"
+															<button title="Cancel" class="button"
+																onclick="document.getElementById('organisationUpdatePersonAddDocumentPopup').style.display='none'"
 																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
 																<i class="fa">&#xf00d;</i>
 															</button>
@@ -688,7 +725,7 @@
 
 								</table>
 
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -696,7 +733,7 @@
 				</div>
 
 			</div>
-		</div>
+			</div>
 	</div>
 
 	<div id="fetchPersonDetailsForVerificationPopup"
@@ -710,7 +747,7 @@
 
 					<div style="width: 100%">
 						<div style="margin-top: 20px">
-							<form onsubmit="return"  style="height: 450px; margin-bottom: 1px"
+							<div style="height: 450px; margin-bottom: 1px"
 								class="well form-horizontal">
 								<table>
 									<tr>
@@ -753,10 +790,12 @@
 														class="bgcTextField" style="width: 80px;" type="text"
 														value="" /></td>
 													<td><label>Gender : </label></td>
-													<td><input disabled="disabled"
-														id="personDetailsForVerificationPopupGender"
-														class="bgcTextField" style="width: 80px;" type="text"
-														value="" /></td>
+													<td>
+														<select disabled="disabled" id="personDetailsForVerificationPopupGender" class="bgcDropdown" style="width: 80px; background-color: rgb(235, 235, 228);">
+															  <option value="m">Male</option>
+															  <option value="f">Female</option>
+														</select>
+														</td>
 
 													<td><label>Mobile : </label></td>
 													<td><input disabled="disabled"
@@ -786,25 +825,27 @@
 										</td>
 										<td>
 											<div
-												style="margin-left: 10px; width: 126px; height: 130px; border: thin;">
-												<img id="personDetailsForVerificationPopupPersonPhotoId"
+												style="margin-left: 10px; border: thin;">
+												<img id="personForVerificationPopupPersonPhotoId"
 													src="images\img_avatar3.png" alt="Person"
-													style="width: 100%">
+													style="width: 126px; height: 130px; ">
 											</div>
 										</td>
 									</tr>
 
 									<tr>
-										<td>
+										<td colspan="2">
 											<table id="personDetailsForVerificationPopupDocuments"
 												class="display" style="width: 100%;">
 												<thead>
 													<tr>
 														<th>Document ID</th>
-														<th>Issuer</th>
 														<th>Document Name</th>
+														<th>Issuer</th>
+														<th>Approver</th>
 														<th>Status</th>
-														<th></th>
+														<th>Comments</th>
+														<th>Action</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -837,7 +878,7 @@
 										</td>
 									</tr>
 								</table>
-							</form>
+							</div>
 						</div>
 					</div>
 
@@ -851,15 +892,15 @@
 	<div id="sharePersonVerifiactionPopup"
 		class="popupbox w3-animate-opacity">
 		<!-- Modal content -->
-		<div class="modal-content" style="width: 47%; height: 300px;">
+		<div class="modal-content" style="width: 47%; height: 330px;">
 			<span class="popupClose"
 				onclick="document.getElementById('sharePersonVerifiactionPopup').style.display='none'">&times;</span>
 			<div id="container_demo">
-				<div id="wrapper" style="width: 100%; height: 250px;">
+				<div id="wrapper" style="width: 100%; height: 330px;">
 
 					<div id="popupboxpanel" class="animate form" style="width: 100%">
 						<div style="margin-top: 20px">
-							<form onsubmit="return"  style="height: 250px; margin-bottom: 1px"
+							<div style="height: 280px; margin-bottom: 1px"
 								class="well form-horizontal">
 
 								<table>
@@ -868,38 +909,73 @@
 											<table>
 												<tr>
 													<td>
-														<button class="button"
-															style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
-															<i class="fa">&#xf093;</i>
-														</button>
+														
 													</td>
 
-													<td><label>Document ID : </label></td>
-													<td><input id="userDocId" class="bgcTextField"
+													<td><label>Person Address : </label></td>
+													<td><input id="sharePersonUserAddress" class="bgcTextField"
 														style="width: 320px;" disabled="disabled" required
-														type="text" value="46e014aaf5dca488057592ee47305d9b3e10" /></td>
+														type="text" value="" />
+														<input id="sharePersonUserId" type="hidden"  />
+														</td>
 												</tr>
 												<tr>
 													<td></td>
-													<td><label>Document Name : </label></td>
-													<td colspan="1"><input id="addressLine1"
-														class="bgcTextField" style="width: 320px;" required
-														type="text" value="10 Marksheet" /></td>
+													<td><label>Person Name : </label></td>
+													<td colspan="1"><input id="sharePersonFullName"
+														class="bgcTextField" disabled="disabled"  style="width: 320px;" required
+														type="text" value="" /></td>
 												</tr>
 												<tr>
-													<td colspan="7"><textarea style="resize: none;"
-															name="message" rows="4" cols="66"
-															placeholder="Please enter your comments"></textarea></td>
+													<td></td>
+													<td><label>Verified by : </label></td>
+													<td colspan="1"><input id="sharePersonVerifiedBy"
+														class="bgcTextField" style="width: 320px;" disabled="disabled"  required
+														type="text" value="" /></td>
 												</tr>
 												<tr>
+													<td></td>
+													<td><label>Status : </label></td>
+													<td colspan="1">
+													<select disabled="disabled" class="bgcDropdown" id="sharePersonVerifiactionStatus" style="width: 320px;background-color: rgb(235, 235, 228);" >
+														  <option value="0">Uploaded</option>
+														  <option value="1">Approved</option>
+														  <option value="2">Rejected</option>
+														</select>	
+													
+													</td>
+														
+														
+												</tr>
+												<tr>
+													<td></td>
+													<td><label>Comments : </label></td>
+													<td colspan="1"><input id="sharePersonVerifiactionComments"
+														class="bgcTextField" style="width: 320px;" required disabled="disabled" 
+														type="text" value="" /></td>
+														
+														
+												</tr>
+												<tr>
+													<td></td>
+													<td><label>Share : </label></td>
+													<td colspan="1"><input id="sharePersonVerifiactionOrgAddress"
+														class="bgcTextField" style="width: 320px;" required  
+														type="text" placeholder="Organisation Address"  /></td>
+														
+														
+												</tr>
+												<tr>
+													
 													<td colspan="7">
 														<p style="text-align: right; margin: 5px 0;">
-															<button title="Approve" class="button"
+															<button title="Share" class="button"
+																onclick="App.shareProfileWithOrganisation()";
 																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
 																<i class="fa">&#xf058;</i>
 															</button>
-															<button title="Reject" class="button"
-																onclick="document.getElementById('addDocumentpopup').style.display='none'"
+															<button title="Cancel" class="button"
+																onclick="document.getElementById('sharePersonVerifiactionPopup').style.display='none'"
 																style="cursor: pointer; font-size: 17px; width: 30px; height: 30px; padding: 0; margin-bottom: 0px; margin-left: 5px">
 																<i class="fa">&#xf00d;</i>
 															</button>
@@ -914,7 +990,7 @@
 
 								</table>
 
-							</form>
+							</div>
 						</div>
 					</div>
 

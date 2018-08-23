@@ -260,7 +260,7 @@ a.hiddenanchor {
 	background: rgb(74, 179, 198);
 }
 
-.button:active, .button:focus {
+.button:active{
 	background: rgb(40, 137, 154);
 	position: relative;
 	top: 1px;
